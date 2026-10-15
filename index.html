@@ -1,0 +1,1098 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Què sap internet de tu?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Courier+Prime:wght@400;700&family=Caveat:wght@700&display=swap">
+<style>
+:root{
+  --paper:#E8EBEF;
+  --sheet:#F7F8FA;
+  --ink:#14171D;
+  --muted:#5A616D;
+  --line:#C7CDD6;
+  --marker:#FFE14D;
+  --marker-ink:#14171D;
+  --stamp:#C62F2A;
+  --ok:#1E7A49;
+  --redact:#14171D;
+  --sans:"Archivo",ui-sans-serif,system-ui,sans-serif;
+  --type:"Courier Prime","Courier New",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#0F1115;--sheet:#181B21;--ink:#E7E9ED;--muted:#9AA1AD;--line:#2B3039;
+    --marker:#E9C93B;--stamp:#FF6A5E;--ok:#4CC38A;--redact:#3A404B;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#0F1115;--sheet:#181B21;--ink:#E7E9ED;--muted:#9AA1AD;--line:#2B3039;
+  --marker:#E9C93B;--stamp:#FF6A5E;--ok:#4CC38A;--redact:#3A404B;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.5}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.02}
+p{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--stamp);outline-offset:2px}
+
+/* NAV */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--ink);color:var(--paper)}
+.nav-inner{max-width:1240px;margin:0 auto;padding-inline:20px;display:flex;gap:4px;overflow-x:auto}
+.nav button{background:none;border:0;padding:14px 16px;font-weight:600;font-size:16px;white-space:nowrap;cursor:pointer;opacity:.6;border-bottom:4px solid transparent;color:var(--paper)}
+.nav button[aria-selected="true"]{opacity:1;border-bottom-color:var(--marker)}
+.nav button span{font-family:var(--type);font-weight:400;margin-right:8px;opacity:.8}
+
+.wrap{max-width:1240px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+.panel{display:flex;flex-direction:column;gap:36px}
+.eyebrow{font-family:var(--type);font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.display{font-stretch:125%;font-weight:900;letter-spacing:-.02em}
+h1.display{font-size:clamp(46px,8vw,104px)}
+h2.display{font-size:clamp(34px,5vw,64px)}
+.lede{font-size:clamp(19px,2vw,24px);max-width:48ch}
+.head{display:flex;flex-direction:column;gap:16px}
+.fine{font-size:14px;color:var(--muted);max-width:70ch}
+mark,.hl{background:linear-gradient(transparent 12%,var(--marker) 12%,var(--marker) 88%,transparent 88%);color:var(--marker-ink);padding:0 .12em}
+
+/* INICI */
+.panel .block{display:flex;flex-direction:column;gap:24px}
+#inici{gap:72px}
+.btn.big{font-size:20px;padding:14px 26px}
+.ideas{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--ink)}
+@media (max-width:860px){.ideas{grid-template-columns:1fr}}
+.idea{padding:20px 20px 20px 0;display:flex;flex-direction:column;gap:8px}
+.idea + .idea{padding-left:20px;border-left:1px solid var(--line)}
+@media (max-width:860px){.idea + .idea{padding-left:0;border-left:0;border-top:1px solid var(--line)}}
+.idea h3,.part h3{font-size:24px;font-stretch:110%}
+.parts{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media (max-width:760px){.parts{grid-template-columns:1fr}}
+.part{background:var(--sheet);border:1px solid var(--line);padding:22px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.part .num{font-family:var(--type);font-size:15px;color:var(--muted)}
+.part p{max-width:56ch}
+.part .learn{font-size:16px;color:var(--muted);border-left:4px solid var(--marker);padding-left:10px}
+.part .learn b{color:var(--ink)}
+.part .btn{margin-top:auto}
+.glossary{margin:0;display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:2px solid var(--ink)}
+@media (max-width:760px){.glossary{grid-template-columns:1fr}}
+.glossary div{padding:14px 18px 14px 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:4px}
+.glossary dt{font-family:var(--type);font-weight:700;font-size:17px}
+.glossary dd{margin:0;color:var(--muted)}
+.norms{margin:0;padding:0;list-style:none;counter-reset:n;display:flex;flex-direction:column;border-top:2px solid var(--ink)}
+.norms li{counter-increment:n;display:grid;grid-template-columns:56px 1fr;gap:12px;padding:16px 0;border-bottom:1px solid var(--line);font-size:19px;max-width:80ch}
+.norms li::before{content:counter(n);font-stretch:125%;font-weight:900;font-size:34px;line-height:1;color:var(--stamp)}
+
+/* PART 1 */
+.investigate{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:900px){.investigate{grid-template-columns:1fr}}
+.profile{background:var(--sheet);border:1px solid var(--line);display:flex;flex-direction:column}
+.p-head{display:grid;grid-template-columns:auto 1fr;gap:18px;padding:20px;align-items:center}
+.avatar{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,#F59E7B,#B66BE0);display:grid;place-items:center;color:#fff;font-weight:800;font-size:34px;font-stretch:125%}
+.p-handle{font-weight:700;font-size:20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.public{font-family:var(--type);font-size:12px;border:1.5px solid var(--stamp);color:var(--stamp);padding:1px 8px;text-transform:uppercase;letter-spacing:.05em}
+.p-stats{display:flex;gap:18px;font-size:15px;color:var(--muted);flex-wrap:wrap}
+.p-stats b{color:var(--ink)}
+.p-bio{font-size:16px;padding:0 20px 16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;border-top:1px solid var(--line)}
+.tile{position:relative;aspect-ratio:1;max-width:100%;container-type:inline-size;overflow:hidden;cursor:pointer;border:0;padding:0;display:grid;place-items:center;text-align:center}
+.tile:hover .tile-label{opacity:1}
+.tile-label{position:absolute;left:4cqw;top:4cqw;right:4cqw;width:max-content;max-width:92cqw;text-align:left;font-family:var(--type);font-size:max(10px,5.4cqw);color:#fff;background:rgba(10,12,16,.55);padding:.6cqw 2cqw;line-height:1.3}
+.tile .seen{position:absolute;right:5cqw;bottom:5cqw;font-family:var(--type);font-size:max(10px,6cqw);background:var(--marker);color:var(--marker-ink);padding:0 5px}
+.clue{transition:background .3s}
+.revealed .clue{background:var(--marker);color:var(--marker-ink);box-shadow:0 0 0 .4cqw var(--marker)}
+
+/* scene props */
+.sign{font-family:var(--sans);font-weight:800;line-height:1.05}
+.s-cake{width:58cqw;height:58cqw;border-radius:50%;background:#fff;color:#C2408B;display:grid;place-items:center;font-size:30cqw;font-stretch:125%;box-shadow:0 2cqw 0 #E8A0C4}
+.s-shirt{color:#fff;font-size:12cqw;font-stretch:125%;letter-spacing:.04em;display:flex;flex-direction:column;gap:2cqw}
+.s-shirt small{font-size:7cqw;font-weight:600;opacity:.9}
+.s-plate{background:#1D4E9E;color:#fff;border:1.4cqw solid #fff;border-radius:2cqw;padding:4cqw 6cqw;font-size:8cqw;display:flex;flex-direction:column;gap:2cqw;box-shadow:0 2cqw 4cqw rgba(0,0,0,.25)}
+.s-plate .line{background:#E63946;border-radius:1cqw;padding:1cqw 3cqw;font-size:12cqw;align-self:center}
+.s-tag{width:46cqw;height:46cqw;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFE9A8,#C99A2E);color:#4A3405;display:grid;place-items:center;font-size:12cqw;border:1.2cqw solid #8F6A12}
+.s-board{background:#fff;color:#1F5C43;padding:5cqw 6cqw;font-size:8cqw;border:1.2cqw solid #9AA5A0;transform:rotate(-2deg);display:flex;flex-direction:column;gap:2cqw}
+.s-board .big{font-size:11cqw}
+.s-pass{background:#fff;color:#1A2A44;padding:4cqw 6cqw;font-size:7cqw;border-radius:2cqw;transform:rotate(3deg);display:flex;flex-direction:column;gap:1.5cqw;text-align:left;box-shadow:0 2cqw 4cqw rgba(0,0,0,.2)}
+.s-pass .route{font-size:13cqw;font-stretch:125%}
+.s-ticket{background:#fff;color:#1B1B2F;padding:4cqw;border-radius:2cqw;display:grid;grid-template-columns:auto 1fr;gap:4cqw;align-items:center;transform:rotate(-3deg);font-size:6.5cqw;text-align:left}
+.qr{width:26cqw;height:26cqw;background:
+  conic-gradient(#1B1B2F 25%,#fff 0 50%,#1B1B2F 0 75%,#fff 0) 0 0/6.5cqw 6.5cqw;
+  outline:1.5cqw solid #1B1B2F}
+.s-street{display:flex;flex-direction:column;gap:4cqw;align-items:center}
+.s-street .door{background:#3A2E22;color:#F2E6C9;width:26cqw;height:26cqw;display:grid;place-items:center;font-size:14cqw;border-radius:1cqw}
+.s-game{background:#0B0F1A;color:#7CF5C9;font-family:var(--type);font-weight:700;padding:4cqw 5cqw;font-size:7cqw;border:1cqw solid #7CF5C9;display:flex;flex-direction:column;gap:2cqw;text-align:left}
+.s-game .pts{font-size:12cqw;color:#fff}
+
+.s-live{display:flex;flex-direction:column;gap:3cqw;color:#fff;font-size:9cqw}
+.s-live .live{background:#E5263B;padding:1.5cqw 4cqw;font-size:8cqw;align-self:center;letter-spacing:.06em}
+.s-chat{background:#2B2D31;color:#DBDEE1;font-family:var(--sans);font-weight:600;padding:4cqw 5cqw;font-size:5.4cqw;overflow-wrap:anywhere;border-radius:2cqw;display:flex;flex-direction:column;gap:2cqw;text-align:left;width:82cqw}
+.s-chat.light{background:#fff;color:#1F2937}
+.s-chat .ch{opacity:.6;font-size:5cqw}
+.s-label{background:#fff;color:#111;padding:4cqw 5cqw;font-size:6.2cqw;display:flex;flex-direction:column;gap:1.6cqw;text-align:left;transform:rotate(-2deg);width:78cqw;box-shadow:0 2cqw 4cqw rgba(0,0,0,.25)}
+.barcode{height:10cqw;background:repeating-linear-gradient(90deg,#111 0 .8cqw,#fff .8cqw 1.6cqw,#111 1.6cqw 3cqw,#fff 3cqw 3.6cqw)}
+.s-card{background:linear-gradient(135deg,#0F2B6B,#2E6FD8);color:#fff;padding:5cqw;border-radius:3cqw;width:78cqw;display:flex;flex-direction:column;gap:2.5cqw;font-size:6.5cqw;text-align:left;transform:rotate(-3deg);box-shadow:0 2cqw 4cqw rgba(0,0,0,.3)}
+.s-card b{font-size:13cqw;font-stretch:125%}
+.s-card .code{font-family:var(--type);font-size:7.5cqw;letter-spacing:.04em}
+.s-card.gym{background:linear-gradient(135deg,#111,#3B3B3B)}
+.s-card.gym .barcode{background:repeating-linear-gradient(90deg,#fff 0 .8cqw,#111 .8cqw 1.6cqw,#fff 1.6cqw 3cqw,#111 3cqw 3.6cqw)}
+.s-note{background:#FFE873;color:#2A2A2A;font-family:"Caveat",cursive;font-weight:700;font-size:10cqw;line-height:1.1;padding:6cqw;width:64cqw;transform:rotate(4deg);box-shadow:0 2cqw 3cqw rgba(0,0,0,.25);text-align:left}
+.s-geo{background:#fff;color:#14171D;border-radius:4cqw;padding:4cqw 6cqw;font-size:7.5cqw;display:flex;flex-direction:column;gap:1.5cqw;box-shadow:0 2cqw 4cqw rgba(0,0,0,.2)}
+.s-geo .pin{font-size:14cqw;line-height:1}
+.s-id{background:linear-gradient(160deg,#E3EEF8,#F6DCE6);color:#1A2433;padding:4cqw;border-radius:3cqw;width:84cqw;display:flex;flex-direction:column;gap:2.5cqw;font-size:5.6cqw;text-align:left;box-shadow:0 2cqw 4cqw rgba(0,0,0,.2)}
+.s-id .idrow{display:grid;grid-template-columns:24cqw 1fr;gap:4cqw;align-items:center}
+.s-id .photo{width:24cqw;height:30cqw;background:#B9C4D0;border-radius:1cqw}
+.s-letter{background:#fff;color:#1F2937;padding:5cqw;width:72cqw;font-size:6cqw;display:flex;flex-direction:column;gap:2cqw;text-align:left;transform:rotate(-2deg);box-shadow:0 2cqw 4cqw rgba(0,0,0,.2)}
+.s-letter .lh{font-size:7.5cqw;border-bottom:.6cqw solid #1F2937;padding-bottom:1.5cqw}
+.s-map{width:86cqw;background:#F3F1EA;border-radius:2cqw;position:relative;aspect-ratio:1.2;overflow:hidden}
+.s-map svg{position:absolute;inset:0;width:100%;height:100%}
+.s-map .pinlabel{position:absolute;left:8cqw;bottom:6cqw;background:#fff;color:#14171D;font-size:5.4cqw;padding:1.5cqw 3cqw;border-radius:1cqw;text-align:left;box-shadow:0 1cqw 2cqw rgba(0,0,0,.2)}
+.s-map .km{position:absolute;right:5cqw;top:4cqw;color:#FC5200;font-size:8cqw;font-stretch:125%}
+.s-mat{background:#7A5A3A;color:#E9D7B5;width:78cqw;height:42cqw;border-radius:2cqw;display:grid;place-items:center;font-size:9cqw;letter-spacing:.14em;position:relative;box-shadow:inset 0 0 0 2cqw #6A4B2E}
+.s-mat .key{position:absolute;right:6cqw;bottom:-2cqw;font-size:13cqw;letter-spacing:0}
+
+.tile img.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.hbox{position:absolute;border:.9cqw solid var(--marker);background:rgba(255,225,77,.16);border-radius:1cqw;opacity:0;transition:opacity .3s;pointer-events:none}
+.revealed .hbox{opacity:1}
+.ui-loc{position:absolute;left:50%;top:58%;transform:translateX(-50%) rotate(-3deg);background:#fff;color:#111;font-weight:800;font-size:6.4cqw;padding:2cqw 4cqw;border-radius:3cqw;white-space:nowrap;box-shadow:0 1cqw 3cqw rgba(0,0,0,.25)}
+.ui-text{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:1.5cqw;width:90%}
+.ui-text span{background:#fff;color:#111;font-weight:800;font-size:7cqw;padding:.6cqw 2.6cqw;border-radius:1.5cqw}
+
+.hard{align-self:flex-start;font-family:var(--type);font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:2px 8px}
+.s-phone{width:76cqw;height:78cqw;margin-top:9cqw;background:#111;border-radius:5cqw;padding:3cqw;display:flex;flex-direction:column;gap:3cqw;text-align:left}
+.s-phone .banner{background:rgba(245,245,247,.96);color:#111;border-radius:3cqw;padding:2.5cqw 3cqw;font-size:4.6cqw;font-weight:600;line-height:1.3}
+.s-phone .meme{flex:1;background:#fff;color:#111;display:grid;place-items:center;text-align:center;font-weight:800;font-size:6cqw;border-radius:2cqw;line-height:1.2}
+.s-map.friends{background:#E8ECEF}
+.bub{position:absolute;background:#fff;color:#111;font-size:4.6cqw;font-weight:700;padding:1cqw 2.5cqw;border-radius:3cqw;box-shadow:0 1cqw 2cqw rgba(0,0,0,.2);white-space:nowrap}
+.bub.me{background:#2563EB;color:#fff}
+.tile .seen.none{background:var(--line);color:var(--ink)}
+.d-info .reveal h4.safe{color:var(--ok)}
+/* Profile switcher */
+.profiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:900px){.profiles{grid-template-columns:repeat(2,1fr)}}
+.pcard{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;text-align:left;padding:12px 14px;border:1.5px solid var(--line);background:var(--sheet);cursor:pointer;font-family:var(--sans)}
+.pcard:hover{border-color:var(--ink)}
+.pcard[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 -5px 0 var(--marker)}
+.pcard .mini{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px}
+.pcard b{display:block;font-size:16px}
+.pcard small{font-family:var(--type);font-size:13px;color:var(--muted)}
+
+/* Dossier */
+.dossier{background:var(--sheet);border:1px solid var(--line);font-family:var(--type);position:sticky;top:76px}
+@media (max-width:900px){.dossier{position:static}}
+.d-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:16px 20px;border-bottom:2px solid var(--ink)}
+.d-head h3{font-family:var(--type);font-size:20px;letter-spacing:.04em}
+.counter{font-size:15px;font-variant-numeric:tabular-nums}
+.counter b{font-size:22px}
+.d-rows{display:flex;flex-direction:column}
+.d-row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:10px 20px;border-bottom:1px dashed var(--line);font-size:16px;align-items:baseline}
+@media (max-width:480px){.d-row{grid-template-columns:1fr;gap:2px}}
+.d-row dt{color:var(--muted);text-transform:uppercase;font-size:13px;letter-spacing:.05em}
+.d-row dd{margin:0}
+.bar{display:inline-block;height:1em;background:var(--redact);vertical-align:-2px}
+.d-row.fresh dd{animation:pop .6s ease}
+@keyframes pop{0%{background:var(--marker)}100%{background:transparent}}
+.d-final{padding:18px 20px;display:flex;flex-direction:column;gap:10px;border-top:2px solid var(--ink)}
+.d-final .pw{font-size:clamp(28px,3.4vw,40px);font-weight:700;color:var(--stamp)}
+.d-actions{display:flex;flex-wrap:wrap;gap:10px;padding:16px 20px}
+.btn{border:1.5px solid var(--ink);background:transparent;padding:10px 16px;font-weight:700;font-size:16px;cursor:pointer;font-family:var(--sans)}
+.btn:hover{background:var(--paper)}
+.btn.solid{background:var(--ink);color:var(--paper)}
+.btn.solid:hover{opacity:.9;background:var(--ink)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Overlay */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(10,12,16,.72);display:grid;place-items:center;padding:20px}
+.detail{background:var(--sheet);max-width:1040px;width:100%;max-height:calc(100vh - 40px);overflow:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:760px){.detail{grid-template-columns:1fr}}
+.detail .tile{cursor:default;width:100%}
+.d-info{padding:28px;display:flex;flex-direction:column;gap:16px}
+.d-info .who{font-weight:700}
+.d-info .cap{font-size:22px}
+.d-info .date{font-family:var(--type);color:var(--muted)}
+.d-info .reveal{border-top:2px solid var(--ink);padding-top:16px;display:flex;flex-direction:column;gap:8px}
+.d-info .reveal h4{margin:0;font-family:var(--type);text-transform:uppercase;font-size:14px;letter-spacing:.06em;color:var(--stamp)}
+.d-info .reveal p{font-size:20px}
+
+/* PART 2 */
+.pw-box{background:var(--sheet);border:1px solid var(--line);padding:24px;display:flex;flex-direction:column;gap:20px}
+.pw-input{width:100%;font-family:var(--type);font-size:clamp(26px,4vw,44px);padding:14px 18px;border:2px solid var(--ink);background:var(--paper);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--type);font-size:15px;border:1px solid var(--line);background:var(--paper);padding:6px 12px;cursor:pointer}
+.chip:hover{border-color:var(--ink)}
+.result{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:760px){.result{grid-template-columns:1fr}}
+.time{font-stretch:125%;font-weight:900;font-size:clamp(40px,6.6vw,84px);line-height:1;letter-spacing:-.02em}
+.meter{height:14px;background:var(--line);margin-top:16px;overflow:hidden}
+.meter i{display:block;height:100%;transition:width .4s,background .4s}
+.verdict{font-family:var(--type);text-transform:uppercase;letter-spacing:.06em;margin-top:8px;font-size:15px}
+.notes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.notes li{padding:8px 12px;border-left:4px solid var(--stamp);background:var(--paper);font-size:16px}
+.notes li.good{border-left-color:var(--ok)}
+.lessons{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:2px solid var(--ink)}
+@media (max-width:760px){.lessons{grid-template-columns:1fr}}
+.lesson{padding:18px 18px 18px 0;display:flex;flex-direction:column;gap:6px}
+.lesson + .lesson{padding-left:18px;border-left:1px solid var(--line)}
+@media (max-width:760px){.lesson + .lesson{padding-left:0;border-left:0;border-top:1px solid var(--line)}}
+.lesson h3{font-size:22px;font-stretch:110%}
+
+/* PART 3 */
+.phish{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:860px){.phish{grid-template-columns:1fr}}
+.phone{background:#11141A;border-radius:34px;padding:16px;max-width:460px;width:100%;justify-self:center}
+.screen{background:#F2F3F5;border-radius:22px;min-height:380px;padding:22px 16px;display:flex;flex-direction:column;gap:14px;color:#14171D}
+.statusbar{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:#14171D;padding:0 6px}
+.msg{background:#fff;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.msg .app{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#6B7280;display:flex;justify-content:space-between}
+.msg .from{font-weight:700;font-size:17px}
+.msg .body{font-size:19px;line-height:1.4}
+.msg .flag{transition:background .3s}
+.shown .msg .flag{background:#FFE14D;box-shadow:0 0 0 2px #FFE14D}
+.shown .msg .flag.okf{background:#BDEBD0;box-shadow:0 0 0 2px #BDEBD0}
+.vote{display:flex;flex-direction:column;gap:18px}
+.vote-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vbtn{padding:22px 10px;font-size:clamp(22px,2.6vw,30px);font-weight:900;font-stretch:125%;border:3px solid var(--ink);background:var(--sheet);cursor:pointer;font-family:var(--sans)}
+.vbtn.scam{border-color:var(--stamp);color:var(--stamp)}
+.vbtn.real{border-color:var(--ok);color:var(--ok)}
+.vbtn:hover{background:var(--paper)}
+.vbtn:disabled{opacity:.35;cursor:default}
+.answer{display:flex;flex-direction:column;gap:10px;padding:18px 20px;background:var(--sheet);border:1px solid var(--line)}
+.answer .stampv{font-stretch:125%;font-weight:900;font-size:clamp(28px,3.4vw,40px);text-transform:uppercase}
+.answer ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:18px}
+.answer .hit{font-family:var(--type);font-size:15px;color:var(--muted)}
+.step-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-family:var(--type);font-size:15px;color:var(--muted)}
+.step-row b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* PART 4 */
+.mission{display:flex;flex-direction:column;border-top:2px solid var(--ink)}
+.task{display:grid;grid-template-columns:auto 1fr;gap:18px;padding:18px 0;border-bottom:1px solid var(--line);align-items:start;cursor:pointer}
+.task input{width:28px;height:28px;margin:4px 0 0;accent-color:var(--ok);cursor:pointer}
+.task h3{font-size:clamp(22px,2.4vw,28px);font-stretch:110%}
+.task p{color:var(--muted);font-size:17px;margin-top:4px}
+.task .path{font-family:var(--type);color:var(--ink);font-size:16px}
+.task.done h3{text-decoration:line-through;text-decoration-color:var(--ok);text-decoration-thickness:3px}
+.closer{border-block:2px solid var(--ink);padding-block:44px;display:flex;flex-direction:column;gap:14px}
+.closer p{font-stretch:125%;font-weight:900;font-size:clamp(40px,7vw,96px);line-height:1;letter-spacing:-.03em;max-width:14ch}
+.closer p span{color:var(--stamp)}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Parts de l'activitat">
+  <div class="nav-inner" role="tablist">
+    <button role="tab" id="tab-inici" aria-controls="inici" aria-selected="true"><span>00</span>Inici</button>
+    <button role="tab" id="tab-perfil" aria-controls="perfil" aria-selected="false"><span>01</span>El perfil</button>
+    <button role="tab" id="tab-contrasenyes" aria-controls="contrasenyes" aria-selected="false"><span>02</span>Contrasenyes</button>
+    <button role="tab" id="tab-estafa" aria-controls="estafa" aria-selected="false"><span>03</span>Estafa o real?</button>
+    <button role="tab" id="tab-missio" aria-controls="missio" aria-selected="false"><span>04</span>Missió</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ 00 INICI ============ -->
+  <section class="panel" id="inici" role="tabpanel" aria-labelledby="tab-inici">
+    <div class="head">
+      <span class="eyebrow">Tutoria · 3r ESO · Ciberseguretat</span>
+      <h1 class="display">Què sap internet de tu?</h1>
+      <p class="lede">Cada foto que pengem diu més coses de les que volíem dir. Avui farem d'investigadors amb perfils inventats per veure fins on es pot arribar <mark>només amb el que és públic</mark>. Després aprendrem a protegir-nos.</p>
+      <div><button class="btn solid big" type="button" data-go="perfil">Comencem</button></div>
+    </div>
+
+    <section class="block">
+      <div class="head">
+        <span class="eyebrow">La idea</span>
+        <h2 class="display">La teva petjada digital</h2>
+        <p class="lede">És tot el que deixes a internet: el que penges, el que comentes, el que comparteixes i el que altres pengen de tu. I no s'esborra del tot: hi ha captures, còpies i gent que ho guarda.</p>
+      </div>
+      <div class="ideas">
+        <article class="idea">
+          <h3>Una foto no és només una foto</h3>
+          <p>Al fons hi ha un rètol, una etiqueta, un número de portal, una notificació. Tu mires el que surt al centre. Qui investiga mira la resta.</p>
+        </article>
+        <article class="idea">
+          <h3>Les peces se sumen</h3>
+          <p>Una dada sola no diu gaire. Deu dades juntes diuen on vius, quan ets sol a casa i quina contrasenya fas servir. Investigar així, amb informació pública, té nom: <b>OSINT</b>.</p>
+        </article>
+        <article class="idea">
+          <h3>Públic vol dir tothom</h3>
+          <p>No només els teus amics: també desconeguts, gent que encara no coneixes i qui ho vegi d'aquí a cinc anys. Un story dura 24 hores; una captura, per sempre.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="head">
+        <span class="eyebrow">Què farem avui</span>
+        <h2 class="display">Quatre parts</h2>
+      </div>
+      <div class="parts">
+        <article class="part">
+          <span class="num">01</span>
+          <h3>El perfil</h3>
+          <p>Per grups, investigueu el perfil d'un alumne de 3r inventat i ompliu-ne l'expedient: on viu, quan és sol a casa i quina contrasenya fa servir. Compte, que no totes les fotos tenen pista.</p>
+          <p class="learn"><b>Aprendreu</b> a veure els detalls que deixen rastre.</p>
+          <button class="btn" type="button" data-go="perfil">Anar-hi</button>
+        </article>
+        <article class="part">
+          <span class="num">02</span>
+          <h3>Contrasenyes</h3>
+          <p>Proposeu contrasenyes i mirem quant trigaria un ordinador a endevinar-les. Algunes cauen a l'instant.</p>
+          <p class="learn"><b>Aprendreu</b> per què la llargada importa més que els símbols i per què la mascota no serveix.</p>
+          <button class="btn" type="button" data-go="contrasenyes">Anar-hi</button>
+        </article>
+        <article class="part">
+          <span class="num">03</span>
+          <h3>Estafa o real?</h3>
+          <p>Quinze missatges com els que us arriben cada setmana. N'hi ha d'estafes i n'hi ha de reals. Voteu i després analitzem les pistes.</p>
+          <p class="learn"><b>Aprendreu</b> a reconèixer el phishing sense desconfiar de tot.</p>
+          <button class="btn" type="button" data-go="estafa">Anar-hi</button>
+        </article>
+        <article class="part">
+          <span class="num">04</span>
+          <h3>Missió</h3>
+          <p>Mòbil a la mà: cinc ajustos per protegir els vostres comptes, fets a classe i no «ja ho faré a casa».</p>
+          <p class="learn"><b>Aprendreu</b> a activar la verificació en dos passos, el compte privat i a treure la ubicació de les fotos.</p>
+          <button class="btn" type="button" data-go="missio">Anar-hi</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="head">
+        <span class="eyebrow">Paraules clau</span>
+        <h2 class="display">El vocabulari d'avui</h2>
+      </div>
+      <dl class="glossary">
+        <div><dt>Petjada digital</dt><dd>Tot el rastre que deixes a internet, el que penges tu i el que pengen de tu.</dd></div>
+        <div><dt>Dades personals</dt><dd>Qualsevol cosa que permet saber qui ets o trobar-te: nom, adreça, telèfon, institut, horaris, cara.</dd></div>
+        <div><dt>OSINT</dt><dd>Investigar algú només amb informació pública. És el que fareu a la part 1.</dd></div>
+        <div><dt>Phishing</dt><dd>Un missatge que es fa passar per algú de confiança perquè cliquis, paguis o donis una contrasenya.</dd></div>
+        <div><dt>Enginyeria social</dt><dd>Enganyar persones en lloc de piratejar màquines: «sóc la teva amiga, passa'm el codi».</dd></div>
+        <div><dt>Verificació en dos passos</dt><dd>Una segona clau, a més de la contrasenya. Si te la roben, sense la segona no poden entrar.</dd></div>
+      </dl>
+    </section>
+
+    <section class="block rules-today">
+      <div class="head">
+        <span class="eyebrow">Abans de començar</span>
+        <h2 class="display">Tres normes</h2>
+      </div>
+      <ol class="norms">
+        <li><span><b>Els perfils són inventats.</b> Ningú d'aquesta web existeix. No investigueu mai el perfil d'una persona real, i encara menys d'un company.</span></li>
+        <li><span><b>Cap contrasenya real.</b> A la part 2 proveu contrasenyes inventades. Les vostres, ni escrites ni dites en veu alta.</span></li>
+        <li><span><b>Si us ha passat alguna cosa, se'n parla.</b> Si algú us ha robat un compte, us ha enganyat o us ha fet sentir malament per internet, ho podeu explicar al tutor en privat.</span></li>
+      </ol>
+      <div><button class="btn solid big" type="button" data-go="perfil">Comencem amb el perfil</button></div>
+    </section>
+  </section>
+
+  <!-- ============ 01 PERFIL ============ -->
+  <section class="panel" id="perfil" role="tabpanel" aria-labelledby="tab-perfil" hidden>
+    <div class="head">
+      <span class="eyebrow">Part 1</span>
+      <h2 class="display">El perfil</h2>
+      <p class="lede">Quatre alumnes de 3r amb el compte públic. Pengen coses normals. Per grups, trieu un perfil i descobriu <mark>on viu</mark>, <mark>quan és sol a casa</mark> i <mark>quina contrasenya fa servir</mark>.</p>
+      <p class="fine">Cap d'aquests perfils existeix: noms, instituts, adreces i números són inventats. Però cada pista apareix cada dia en milers de perfils reals.</p>
+    </div>
+
+    <div class="profiles" id="profiles" role="group" aria-label="Tria un perfil"></div>
+
+    <div class="investigate">
+      <div class="profile">
+        <div class="p-head">
+          <div class="avatar" id="pAvatar" aria-hidden="true"></div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div class="p-handle"><span id="pHandle"></span> <span class="public">Compte públic</span></div>
+            <div class="p-stats" id="pStats"></div>
+          </div>
+        </div>
+        <p class="p-bio" id="pBio"></p>
+        <div class="grid" id="grid"></div>
+      </div>
+
+      <aside class="dossier" aria-live="polite">
+        <div class="d-head">
+          <h3 id="dHandle">EXPEDIENT</h3>
+          <span class="counter">Pistes <b id="found">0</b> / <span id="total">0</span></span>
+        </div>
+        <dl class="d-rows" id="dossier"></dl>
+        <div class="d-final" id="final" hidden>
+          <span class="eyebrow" style="color:var(--stamp)">Contrasenya probable</span>
+          <span class="pw" id="finalPw"></span>
+          <p style="font-size:16px" id="finalText"></p>
+        </div>
+        <div class="d-actions">
+          <button class="btn solid" id="guessBtn" type="button" disabled>Endevina la contrasenya</button>
+          <button class="btn" id="allBtn" type="button">Revela-ho tot</button>
+          <button class="btn" id="resetBtn" type="button">Reinicia</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 02 CONTRASENYES ============ -->
+  <section class="panel" id="contrasenyes" role="tabpanel" aria-labelledby="tab-contrasenyes" hidden>
+    <div class="head">
+      <span class="eyebrow">Part 2</span>
+      <h2 class="display">Quant trigarien a endevinar-la?</h2>
+      <p class="lede">Un ordinador preparat per atacar prova uns 10.000 milions de contrasenyes per segon. Proposeu-ne i mirem quant aguanten.</p>
+      <p class="fine">No hi escriviu mai una contrasenya que feu servir de veritat.</p>
+    </div>
+    <div class="pw-box">
+      <input class="pw-input" id="pw" type="text" value="Coco2011!" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Contrasenya de prova">
+      <div class="chips" id="chips"></div>
+      <div class="result">
+        <div>
+          <div class="eyebrow">Temps per endevinar-la</div>
+          <div class="time" id="time">—</div>
+          <div class="meter"><i id="meter"></i></div>
+          <div class="verdict" id="verdict"></div>
+        </div>
+        <ul class="notes" id="notes"></ul>
+      </div>
+    </div>
+    <div class="lessons">
+      <div class="lesson"><h3>La llargada guanya</h3><p>Quatre paraules a l'atzar aguanten més que vuit caràcters estranys. I les recordes.</p></div>
+      <div class="lesson"><h3>Res del teu perfil</h3><p>Mascota, any, equip, sèrie preferida: si ho has penjat, ja no és secret.</p></div>
+      <div class="lesson"><h3>Una per a cada lloc</h3><p>Si te'n roben una, que no obri totes les altres. Un gestor de contrasenyes les recorda per tu.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 03 ESTAFA ============ -->
+  <section class="panel" id="estafa" role="tabpanel" aria-labelledby="tab-estafa" hidden>
+    <div class="head">
+      <span class="eyebrow">Part 3</span>
+      <h2 class="display">Estafa o real?</h2>
+      <p class="lede">Quinze missatges que us poden arribar aquesta setmana. N'hi ha d'estafes i n'hi ha de reals. Voteu a mà alçada i després mirem les pistes.</p>
+    </div>
+    <div class="phish">
+      <div class="phone" aria-live="polite">
+        <div class="screen" id="screen">
+          <div class="statusbar"><span id="clock">9:41</span><span>5G ▮▮▮</span></div>
+          <div id="msgSlot"></div>
+        </div>
+      </div>
+      <div class="vote">
+        <div class="step-row"><span>Missatge <b id="mIdx">1 / 15</b></span><span>Encerts de la classe <b id="score">0 / 0</b></span></div>
+        <div class="vote-btns">
+          <button class="vbtn scam" id="voteScam" type="button">Estafa</button>
+          <button class="vbtn real" id="voteReal" type="button">És real</button>
+        </div>
+        <div class="answer" id="answer" hidden>
+          <span class="stampv" id="aStamp"></span>
+          <span class="hit" id="aHit"></span>
+          <ul id="aList"></ul>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" id="prevMsg" type="button">Anterior</button>
+          <button class="btn solid" id="nextMsg" type="button">Següent missatge</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 MISSIÓ ============ -->
+  <section class="panel" id="missio" role="tabpanel" aria-labelledby="tab-missio" hidden>
+    <div class="head">
+      <span class="eyebrow">Part 4 · Mòbil a la mà</span>
+      <h2 class="display">Missió: blinda el teu compte</h2>
+      <p class="lede">Cinc minuts. Ho feu ara, no a casa.</p>
+    </div>
+    <div class="mission" id="mission"></div>
+    <div class="step-row"><span>Fet a la pissarra <b id="mDone">0 / 5</b></span></div>
+    <div class="closer">
+      <span class="eyebrow">Per acabar</span>
+      <p>Si ho penges, <span>ja no és només teu.</span></p>
+    </div>
+  </section>
+
+</main>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="detail" role="dialog" aria-modal="true" aria-labelledby="dCap">
+    <div id="dTile"></div>
+    <div class="d-info">
+      <span class="who" id="dWho"></span>
+      <p class="cap" id="dCap"></p>
+      <span class="date" id="dDate"></span>
+      <div class="reveal" id="dReveal" hidden>
+        <span class="hard" id="dHard" hidden>Pista difícil</span>
+        <h4 id="dTitle"></h4>
+        <p id="dText"></p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:auto">
+        <button class="btn solid" id="dShow" type="button">Mostra la pista</button>
+        <button class="btn" id="dClose" type="button">Tanca</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+/* ---------------- Tabs ---------------- */
+const tabs=[...document.querySelectorAll('[role="tab"]')];
+function show(id){
+  tabs.forEach(t=>{const on=t.getAttribute('aria-controls')===id;t.setAttribute('aria-selected',on);document.getElementById(t.getAttribute('aria-controls')).hidden=!on;});
+  window.scrollTo({top:0});
+}
+tabs.forEach(t=>t.addEventListener('click',()=>{show(t.getAttribute('aria-controls'));try{history.replaceState(null,'','#'+t.getAttribute('aria-controls'))}catch(e){}}));
+const start=(location.hash||'').slice(1);
+if(['inici','perfil','contrasenyes','estafa','missio'].includes(start)) show(start);
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{show(b.dataset.go);try{history.replaceState(null,'','#'+b.dataset.go)}catch(e){}}));
+
+/* ---------------- Part 1: profiles ---------------- */
+const PROFILES=[
+ {id:'martina',handle:'@marti.vdl',name:'Martina V. 🌸',bio:'3r ESO · vòlei 🏐 · 🐶',letter:'M',av:'linear-gradient(135deg,#F59E7B,#B66BE0)',followers:412,following:380,
+  final:{pw:'Coco2011!',text:'Nom de la mascota + any de naixement + «!». I la pregunta de seguretat «Nom de la teva primera mascota?» ja té resposta.'},
+  posts:[
+   {id:'concert',bg:'linear-gradient(140deg,#1B1B2F,#E43F5A)',label:'[foto: entrades]',
+    scene:'<div class="sign s-ticket"><div class="qr clue"></div><div>CONCERT<br><b style="font-size:9cqw">PALAU S. JORDI</b><br>Fila 12 · Seient 31</div></div>',
+    cap:'JA LES TINC 🎟️🎤 qui ve???',date:'2 d\'octubre',
+    title:'Codi QR visible',text:'Amb el QR de la foto, qualsevol pot imprimir les entrades i entrar abans que ella. El primer que passa el QR, entra.',
+    key:'entrades',label2:'Entrades',val:'QR visible: les entrades es poden copiar'},
+   {id:'bus',bg:'linear-gradient(160deg,#8FB8C9,#D9E4E8)',label:'[foto: parada de bus]',
+    scene:'<div class="sign s-plate"><span class="clue">PL. PAU CASALS</span><span class="line clue">V7</span></div>',
+    cap:'esperant el V7 com cada dia a les <span class="clue">7:50</span> 🙄',date:'22 de setembre',
+    title:'Rutina diària',text:'Ja sabem on agafa el bus, quina línia i a quina hora. Cada dia, al mateix lloc.',
+    key:'rutina',label2:'Rutina',val:'Pl. Pau Casals, bus V7, cada dia a les 7:50'},
+   {id:'volei',bg:'linear-gradient(150deg,#4FB286,#2E7D5B)',label:'[foto: pissarra del pavelló]',
+    scene:'<div class="sign s-board"><span class="big">ENTRENOS</span><span class="clue">DT i DJ · 18–20 h</span><span style="font-size:6cqw">Cadet femení</span></div>',
+    cap:'vòlei dimarts i dijous, no em busqueu 🏐',date:'18 de setembre',
+    title:'Horari fix',text:'Dimarts i dijous de 18 a 20 h no és a casa. Si la família treballa, la casa és buida.',
+    key:'fora',label2:'Fora de casa',val:'Dimarts i dijous, 18–20 h, a vòlei'},
+   {id:'institut',bg:'linear-gradient(160deg,#2D3A57,#566B9A)',label:'[foto: la dessuadora]',
+    scene:'<div class="sign s-shirt"><span class="clue">INS RIU CLAR</span><small class="clue">3r ESO · 2026–27</small></div>',
+    cap:'primer dia de 3r 😴',date:'12 de setembre',
+    title:'Institut i curs',text:'La dessuadora diu on estudia i en quin curs és. Ja sabem on és cada matí de 8 a 14:30.',
+    key:'institut',label2:'Institut',val:'Ins Riu Clar, 3r ESO'},
+   {id:'pis',bg:'linear-gradient(160deg,#C9B79C,#8C7B65)',label:'[foto: portal de casa]',
+    scene:'<div class="s-street"><div class="sign s-plate" style="font-size:7cqw"><span class="clue">C/ de les Acàcies</span></div><div class="door sign clue">14</div></div>',
+    cap:'pis nou!!! 🏠✨',date:'28 d\'agost',
+    title:'Adreça',text:'Placa del carrer i número del portal a la mateixa foto. Ja sabem on viu.',
+    key:'adreca',label2:'Adreça',val:'C/ de les Acàcies, 14'},
+   {id:'menorca',bg:'linear-gradient(160deg,#5BC0EB,#FDE74C)',label:'[foto: targeta d\'embarcament]',
+    scene:'<div class="sign s-pass"><span>VUELING · VY1504</span><span class="route">BCN → MAH</span><span class="clue">1 AGO · 07:15</span><span style="font-size:5cqw">VIDAL/MARTINA · 14C</span></div>',
+    cap:'MENORCA 2 SETMANES!!! ✈️ fins el <span class="clue">15</span>',date:'1 d\'agost',
+    title:'Casa buida',text:'De l\'1 al 15 d\'agost tota la família fora. I a la targeta surt el cognom i el codi de vol.',
+    key:'vacances',label2:'Vacances',val:'1–15 d\'agost tots fora: casa buida'},
+   {id:'coco',bg:'linear-gradient(150deg,#F2C57C,#E58F5B)',label:'[foto: el gos]',
+    scene:'<div class="sign s-tag clue">COCO</div>',
+    cap:'el <span class="clue">Coco</span> fa 3 anys 🐶❤️',date:'14 de juliol',
+    title:'Nom de la mascota',text:'«Nom de la teva primera mascota» és la pregunta de seguretat més típica. I també una de les contrasenyes més típiques.',
+    key:'mascota',label2:'Mascota',val:'Coco (gos)'},
+   {id:'joc',bg:'linear-gradient(150deg,#222831,#3E4A5C)',label:'[captura de pantalla]',
+    scene:'<div class="sign s-game"><span>RÀNQUING</span><span class="clue">marti_coco2011</span><span class="pts">4.120 pts</span></div>',
+    cap:'qui em supera? 😎',date:'6 de maig',
+    title:'Nom d\'usuari',text:'Nom + mascota + any. Qui fa servir això com a usuari sol fer servir el mateix patró per a la contrasenya.',
+    key:'usuari',label2:'Usuari',val:'marti_coco2011: nom + mascota + any'},
+   {id:'aniversari',bg:'linear-gradient(140deg,#F6A6C1,#B983FF)',label:'[foto: pastís]',
+    scene:'<div class="sign s-cake clue">15</div>',
+    cap:'15!!! gràcies a totes per venir 💜💜',date:'<span class="clue">3 de març</span>',
+    title:'Data de naixement',text:'Data de la foto + «15» = va néixer el 3 de març de 2011. Moltes webs la demanen per recuperar el compte.',
+    key:'aniversari',label2:'Aniversari',val:'3 de març de 2011'}
+  ]},
+ {id:'pau',handle:'@pau.srr19',name:'Pau S.',bio:'culé 💙❤️ · streams cada dia · 19',letter:'P',av:'linear-gradient(135deg,#3F5EFB,#A0153E)',followers:268,following:301,
+  final:{pw:'Pau2011Serra',text:'És la contrasenya del wifi, i ja sabem com les fa: nom + any + cognom. La del correu serà igual o gairebé igual. I el correu ja el tenim.'},
+  posts:[
+   {id:'stream',bg:'linear-gradient(150deg,#1A1036,#6441A5)',label:'[foto: pantalla del stream]',
+    scene:'<div class="sign s-live"><span class="live">● EN DIRECTE</span><span class="clue">Cada dia 17–19 h</span><span style="font-size:6cqw;opacity:.8">pau_srr19 · 23 espectadors</span></div>',
+    cap:'stream avui també! <span class="clue">sol a casa fins a les 8</span> 😎',date:'3 d\'octubre',
+    title:'Sol a casa',text:'Cada tarda de 17 a 20 h és sol a casa, i ho diu en públic. També diu exactament quan arriben els pares.',
+    key:'sol',label2:'Sol a casa',val:'Cada dia de 17 a 20 h'},
+   {id:'discord',bg:'linear-gradient(150deg,#404EED,#23272A)',label:'[captura del Discord]',
+    scene:'<div class="sign s-chat"><span class="ch"># general</span><span>pau_srr19: afegiu-me!!</span><span class="clue">pau.serra2011@gmail.com</span></div>',
+    cap:'server nou, entreu 👾',date:'28 de setembre',
+    title:'Correu electrònic',text:'Amb el correu ja tenen la meitat de l\'inici de sessió. I li poden enviar correus falsos fent veure que són Google.',
+    key:'correu',label2:'Correu',val:'pau.serra2011@gmail.com'},
+   {id:'ps5',bg:'linear-gradient(160deg,#D9D4CC,#A69F94)',label:'[foto: caixa de l\'enviament]',
+    scene:'<div class="sign s-label"><span>ENVIAMENT · 1/1</span><b class="clue" style="font-size:8cqw">PAU SERRA</b><span class="clue">Av. del Mar, 22, 3r 2a</span><div class="barcode"></div></div>',
+    cap:'ha arribat la PS5!!! 🎮',date:'20 de setembre',
+    title:'Adreça completa',text:'L\'etiqueta porta nom, carrer, número, pis i porta. I ara tothom sap que a casa hi ha una consola nova.',
+    key:'adreca',label2:'Adreça',val:'Av. del Mar, 22, 3r 2a'},
+   {id:'regal',bg:'linear-gradient(150deg,#F7F7F7,#C9D3E0)',label:'[foto: targeta regal]',
+    scene:'<div class="sign s-card"><span>TARGETA REGAL</span><b>20 €</b><span class="code clue">7K2P-X9QD-4MRT</span></div>',
+    cap:'regal d\'aniversari 🎁',date:'14 de setembre',
+    title:'Codi de la targeta regal',text:'Qualsevol que vegi la foto pot bescanviar el codi abans que ell. Vint euros perduts en segons.',
+    key:'regal',label2:'Targeta regal',val:'Codi visible: algú ja l\'ha gastat'},
+   {id:'samarreta',bg:'linear-gradient(90deg,#A50044 50%,#004D98 50%)',label:'[foto: samarreta]',
+    scene:'<div class="sign s-shirt"><span class="clue">SERRA</span><span class="clue" style="font-size:26cqw">19</span><small class="clue">CF RIU CLAR · INFANTIL</small></div>',
+    cap:'partit dissabte a les 10, veniu!! 💪',date:'9 de setembre',
+    title:'Club i horari',text:'Equip, dorsal i que juga dissabte a les 10. Ja saben on trobar-lo cada cap de setmana.',
+    key:'club',label2:'Club',val:'CF Riu Clar, dorsal 19, dissabtes 10 h'},
+   {id:'wifi',bg:'linear-gradient(160deg,#E9EEF2,#B8C4CE)',label:'[foto: nota a la nevera]',
+    scene:'<div class="sign s-note">WIFI<br>MiFibra-8C21<br><span class="clue">Pau2011Serra</span></div>',
+    cap:'per si veniu a casa 😂',date:'2 de setembre',
+    title:'Contrasenya del wifi',text:'Qualsevol a prop de casa pot entrar a la xarxa. I ara sabem com fa les contrasenyes: nom + any + cognom.',
+    key:'wifi',label2:'Wifi',val:'Pau2011Serra'}
+  ]},
+ {id:'aina',handle:'@aina.dibuixa',name:'Aina R. 🎨',bio:'dibuixo coses · 3r ESO · 🐈 Lluna',letter:'A',av:'linear-gradient(135deg,#34D399,#0EA5E9)',followers:533,following:210,
+  final:{pw:'Lluna2011',text:'Mascota + any de naixement, que surt al DNI. I amb les preguntes de seguretat resoltes, ni tan sols cal la contrasenya: poden recuperar el compte.'},
+  posts:[
+   {id:'parc',bg:'linear-gradient(160deg,#A7D49B,#4E8D52)',label:'[foto: el parc]',
+    scene:'<div class="sign s-geo"><span class="pin">📍</span><span class="clue">Parc de l\'Estació</span><span class="clue">ara mateix</span></div>',
+    cap:'dibuixant al parc, <span class="clue">sola</span> i feliç ☀️',date:'fa 12 minuts',
+    title:'Ubicació en directe',text:'Diu on és en aquest moment, i que és sola. La ubicació en directe és la pista més perillosa de totes.',
+    key:'ara',label2:'Ara mateix',val:'Sola al Parc de l\'Estació'},
+   {id:'dni',bg:'linear-gradient(150deg,#FBCFE8,#C4B5FD)',label:'[foto: el DNI nou]',
+    scene:'<div class="sign s-id"><span style="font-size:4.6cqw;letter-spacing:.04em">DOCUMENT NACIONAL D\'IDENTITAT</span><div class="idrow"><div class="photo"></div><div><b class="clue">RIBAS PUIG</b><br>AINA<br><span class="clue">12345678-Z</span><br><span class="clue">04 11 2011</span></div></div></div>',
+    cap:'primer DNI!!! quina foto més lletja 💀',date:'30 de setembre',
+    title:'Document d\'identitat',text:'Amb el número de DNI, els cognoms i la data de naixement es poden fer contractes, compres o comptes en nom seu.',
+    key:'dni',label2:'Identitat',val:'Aina Ribas Puig · DNI · 4/11/2011'},
+   {id:'notes',bg:'linear-gradient(150deg,#E0E7FF,#A5B4FC)',label:'[foto: informe de notes]',
+    scene:'<div class="sign s-letter"><span class="lh clue">INS CAN VIDAL</span><span>Informe d\'avaluació inicial</span><span class="clue">Aina Ribas · 3r A</span><span>Matemàtiques ........ 9</span></div>',
+    cap:'avaluació inicial: mates 9 🤓',date:'2 d\'octubre',
+    title:'Institut, curs i grup',text:'Nom de l\'institut, curs i grup. Ja saben on és cada matí i amb qui.',
+    key:'institut',label2:'Institut',val:'Ins Can Vidal, 3r A'},
+   {id:'grup',bg:'linear-gradient(150deg,#DCF8C6,#7BC67E)',label:'[captura del grup de classe]',
+    scene:'<div class="sign s-chat light"><span class="ch">3r A 💬 · 27 membres</span><span class="clue">+34 600 000 111 · Júlia</span><span class="clue">+34 600 000 222 · Nil</span><span>Júlia: algú té els deures??</span></div>',
+    cap:'el grup de classe és un caos 😂',date:'15 de setembre',
+    title:'Dades d\'altres persones',text:'A la captura surten els telèfons dels companys. Ha exposat gent que no ha decidit res.',
+    key:'altres',label2:'Dades d\'altres',val:'Telèfons de la Júlia i el Nil'},
+   {id:'rutina',bg:'linear-gradient(160deg,#FDE68A,#F59E0B)',label:'[vídeo: la meva rutina]',
+    scene:'<div class="sign s-board"><span class="big">MATÍ ✨</span><span>7:00 em llevo</span><span class="clue">7:40 surto sola</span><span class="clue">per C/ Roger de Flor</span></div>',
+    cap:'la meva rutina de matí ✨',date:'10 de setembre',
+    title:'Ruta a peu',text:'A quina hora surt de casa, sola, i per quin carrer passa. Cada dia igual.',
+    key:'ruta',label2:'Ruta',val:'7:40, sola, per C/ Roger de Flor'},
+   {id:'lluna',bg:'linear-gradient(150deg,#94A3B8,#475569)',label:'[foto: la gata]',
+    scene:'<div class="sign s-tag clue" style="background:radial-gradient(circle at 35% 30%,#F1F5F9,#94A3B8);color:#1E293B;border-color:#64748B">LLUNA</div>',
+    cap:'la <span class="clue">Lluna</span> fa 2 anys 🐈 nascuda a <span class="clue">Reus</span> com jo 💛',date:'1 de setembre',
+    title:'Preguntes de seguretat',text:'«Nom de la teva mascota» i «Ciutat on vas néixer»: dues preguntes de seguretat resoltes en una sola foto.',
+    key:'preguntes',label2:'Seguretat',val:'Mascota: Lluna · Ciutat: Reus'}
+  ]},
+ {id:'marc',handle:'@marc.fit_07',name:'Marc T.',bio:'running 🏃 · gym 💪 · 07',letter:'M',av:'linear-gradient(135deg,#FC5200,#FBBF24)',followers:189,following:244,
+  final:{pw:'marcfit_07',text:'Ni calia endevinar-la: era en un post-it. I com que la fa servir a tot arreu, també obre el Gmail.'},
+  posts:[
+   {id:'strava',bg:'linear-gradient(150deg,#FFEDD5,#FDBA74)',label:'[captura de l\'app de córrer]',
+    scene:'<div class="sign s-map"><svg viewBox="0 0 100 84" aria-hidden="true"><path d="M0 60 H100 M30 0 V84 M70 0 V84 M0 25 H100" stroke="#D9D3C6" stroke-width="5" fill="none"/><path d="M18 64 C25 40,40 30,55 22 S88 18,84 42 S60 72,40 70 S20 70,18 64" stroke="#FC5200" stroke-width="3" fill="none"/><circle cx="18" cy="64" r="4" fill="#14171D"/></svg><span class="km">10,2 km</span><span class="pinlabel clue">INICI · FINAL<br>C/ Major, 5</span></div>',
+    cap:'10 km abans d\'esmorzar 🔥',date:'4 d\'octubre',
+    title:'Adreça per la ruta',text:'La ruta comença i acaba al mateix punt: la porta de casa. Les apps d\'esport ho publiquen si no amagues l\'inici.',
+    key:'adreca',label2:'Adreça',val:'C/ Major, 5'},
+   {id:'riu',bg:'linear-gradient(160deg,#A5F3FC,#0E7490)',label:'[foto: el camí del riu]',
+    scene:'<div class="sign s-board"><span class="big">DISSABTES</span><span class="clue">8:00 · sol</span><span class="clue">camí del riu</span></div>',
+    cap:'cada dissabte a les 8, sol, pel camí del riu. qui s\'apunta?',date:'27 de setembre',
+    title:'Rutina en solitari',text:'Hora, lloc i que hi va sol. Cada setmana igual.',
+    key:'rutina',label2:'Rutina',val:'Dissabtes 8:00, sol, camí del riu'},
+   {id:'claus',bg:'linear-gradient(160deg,#D6D3D1,#78716C)',label:'[foto: l\'entrada de casa]',
+    scene:'<div class="sign s-mat"><span>BENVINGUTS</span><span class="key clue">🔑</span></div>',
+    cap:'sempre em deixo les claus 😂 per sort <span class="clue">sota l\'estora</span> n\'hi ha unes altres',date:'19 de setembre',
+    title:'Claus de casa',text:'Ja saben on viu i on hi ha unes claus. No cal dir res més.',
+    key:'claus',label2:'Claus',val:'Sota l\'estora de l\'entrada'},
+   {id:'postit',bg:'linear-gradient(160deg,#334155,#0F172A)',label:'[foto: el portàtil]',
+    scene:'<div class="sign s-note">insta:<br><span class="clue">marcfit_07</span><br>gmail: igual</div>',
+    cap:'setup d\'estudi 📚✨',date:'11 de setembre',
+    title:'Contrasenya en un post-it',text:'La contrasenya enganxada al portàtil, a la foto. I a sobre fa servir la mateixa per al Gmail.',
+    key:'pw',label2:'Contrasenya',val:'marcfit_07 (Insta i Gmail)'},
+   {id:'gym',bg:'linear-gradient(150deg,#F87171,#7F1D1D)',label:'[foto: carnet del gimnàs]',
+    scene:'<div class="sign s-card gym"><span>GYM FORMA+</span><b class="clue" style="font-size:8cqw">MARC TORRES</b><div class="barcode clue"></div></div>',
+    cap:'per fi m\'he apuntat al gimnàs 💪',date:'5 de setembre',
+    title:'Carnet amb codi de barres',text:'El codi de barres es pot copiar de la foto i fer servir per entrar amb el seu carnet. I ja tenim el cognom.',
+    key:'gym',label2:'Gimnàs',val:'Marc Torres · codi del carnet visible'},
+   {id:'germa',bg:'linear-gradient(150deg,#FCD34D,#F97316)',label:'[foto: festival de l\'escola]',
+    scene:'<div class="sign s-shirt"><span class="clue">ESCOLA SOL IXENT</span><small class="clue">Festival de final de curs · 4t B</small></div>',
+    cap:'el meu germà petit al festival 🥹 <span class="clue">@biel.trs</span>',date:'20 de juny',
+    title:'Dades del germà',text:'Ha publicat on estudia el seu germà petit, el curs, i l\'ha etiquetat. El germà no ha decidit res.',
+    key:'germa',label2:'Germà',val:'Biel · Escola Sol Ixent, 4t B'}
+  ]}
+];
+const EXTRA={
+ martina:[
+  {id:'notif',hard:true,bg:'linear-gradient(150deg,#1F2937,#4B5563)',label:'[captura de pantalla]',
+   scene:'<div class="sign s-phone"><div class="banner clue"><b>💬 Mama</b> · ara<br>la clau és a la bústia, arribo a les 9</div><div class="meme">quan el profe diu<br>«última pregunta»<br>i en fa 6 més 💀</div></div>',
+   cap:'JAJAJAJ 💀💀💀',date:'29 de setembre',
+   title:'Una notificació colada',text:'Volia penjar un meme, però a dalt de la captura ha sortit el missatge de la mare: la clau és a la bústia i fins a les 9 no arriba ningú.',
+   key:'clau',label2:'Clau de casa',val:'A la bústia · sola fins a les 9'},
+  {id:'motxilla',hard:true,label:'[foto: motxilla nova]',
+   cap:'motxilla nova per a 3r 💜',date:'8 de setembre',
+   title:'Nom complet i telèfon',text:'L\'etiqueta de la motxilla porta el nom complet i el mòbil. Amb el número la poden trobar a WhatsApp, a Bizum i a moltes apps.',
+   key:'telefon',label2:'Telèfon',val:'Martina Vidal · 600 000 333'},
+  {id:'vista',hard:true,label:'[foto: des del balcó]',
+   cap:'les millors vistes 🌅',date:'5 de setembre',
+   title:'Què hi ha davant de casa',text:'Al davant: Farmàcia Puig i Forn Sant Jordi, amb el campanar al fons. Amb Google Maps es troba el carrer en dos minuts, i per l\'alçada, el pis.',
+   key:'vista',label2:'Davant de casa',val:'Farmàcia Puig i Forn Sant Jordi · 3r pis'}
+ ],
+ pau:[
+  {id:'festa',hard:true,bg:'linear-gradient(160deg,#FF3CAC,#784BA0,#2B86C5)',label:'[story]',
+   scene:'<div class="ui-text"><span>dissabte festa a casa 🎉</span><span class="clue">els meus pares no hi són</span><span class="clue">passeu-ho!!</span></div>',
+   cap:'(story, 24 h)',date:'26 de setembre',
+   title:'Casa sense adults, oberta a tothom',text:'«Passeu-ho» vol dir que ho veurà gent que no coneix. Amb l\'adreça de l\'etiqueta de la PS5, qualsevol sap on és la festa i que no hi haurà adults.',
+   key:'festa',label2:'Dissabte',val:'Festa sense adults, oberta a tothom'},
+  {id:'pizza',hard:true,label:'[foto: el sopar]',
+   cap:'sopar sol un altre cop 🍕⚽',date:'17 de setembre',
+   title:'Tiquet de la comanda',text:'Al tiquet grapat a la bossa hi ha nom, adreça i telèfon. I el text confirma que molts vespres és sol a casa.',
+   key:'telefon',label2:'Telèfon',val:'600 000 444'},
+  {id:'cotxe',hard:true,label:'[foto: el cotxe carregat]',
+   cap:'els pares ja ho tenen tot carregat 🙄 cap a Andorra fins diumenge',date:'6 de setembre',
+   title:'Matrícula i cap de setmana fora',text:'Matrícula del cotxe de la família i el carrer de casa al fons. I tot el cap de setmana, la casa buida.',
+   key:'cotxe',label2:'Cotxe',val:'4821 KLM · fora fins diumenge'}
+ ],
+ aina:[
+  {id:'mapa',hard:true,bg:'linear-gradient(150deg,#E5E7EB,#CBD5E1)',label:'[captura del mapa d\'amics]',
+   scene:'<div class="sign s-map friends"><svg viewBox="0 0 100 84" aria-hidden="true"><path d="M0 20 H100 M0 58 H100 M22 0 V84 M64 0 V84 M0 84 L100 0" stroke="#fff" stroke-width="4" fill="none"/></svg><span class="bub clue" style="left:6cqw;top:8cqw">Júlia · a casa · fa 2 min</span><span class="bub clue" style="left:26cqw;top:40cqw">Nil · Escola de Música</span><span class="bub me" style="left:52cqw;top:60cqw">Tu</span></div>',
+   cap:'on sou tots??',date:'27 de setembre',
+   title:'La ubicació dels altres',text:'El mapa d\'amics mostra on és la Júlia i on és el Nil, en directe. Ells la compartien amb l\'Aina, no amb tot internet.',
+   key:'mapa',label2:'Mapa d\'amics',val:'Júlia a casa · Nil a l\'Escola de Música'},
+  {id:'ascensor',hard:true,label:'[foto: l\'ascensor]',
+   cap:'ascensor espatllat un altre cop 🙄 4 pisos a peu',date:'20 de setembre',
+   title:'Adreça i pis',text:'La placa de l\'ascensor diu el carrer i el número. El botó encès i el text diuen el pis: el 4t.',
+   key:'adreca',label2:'Adreça',val:'C/ Roger de Flor, 33, 4t'},
+  {id:'tele',hard:true,label:'[foto: nit de peli]',
+   cap:'nit de peli en família 🍿',date:'13 de setembre',
+   title:'Noms de la família',text:'El menú de perfils diu com es diuen la mare, el pare i l\'àvia. Amb això algú pot escriure «Hola, sóc la Rosa, la mare de l\'Aina…» i sonar creïble.',
+   key:'familia',label2:'Família',val:'Rosa (mare) · Jordi (pare) · Pilar (àvia)'}
+ ],
+ marc:[
+  {id:'xat',hard:true,bg:'linear-gradient(150deg,#DCF8C6,#86C98A)',label:'[captura del grup]',
+   scene:'<div class="sign s-chat light"><span class="ch">Colla 🏀 · 6 membres</span><span>Marc: veniu a casa a les 5</span><span class="clue">Marc: el codi del portal és 1984</span><span>Pol: 👍</span></div>',
+   cap:'aquests són els meus amics 😂😂',date:'1 d\'octubre',
+   title:'Codi del portal',text:'Volia ensenyar el grup, però a la captura hi ha el codi per obrir el portal de casa. Amb l\'adreça de la ruta de córrer, ja poden entrar a l\'edifici.',
+   key:'codi',label2:'Codi del portal',val:'1984'},
+  {id:'bici',hard:true,label:'[foto: bici nova]',
+   cap:'bici nova 😍 ja no vaig a peu a entrenar',date:'24 de setembre',
+   title:'Què val la pena robar',text:'Una bici nova, el número del portal on la deixa i un candau de xifres barat. És un anunci per a lladres.',
+   key:'bici',label2:'Bici',val:'Bici nova al portal núm. 5, candau barat'},
+  {id:'clau',label:'[foto: clau nova]',
+   cap:'clau nova del pis 🔑 per si la perdo 😅',date:'8 de setembre',
+   title:'Clau amb adreça',text:'Si la perd, qui la trobi sap exactament quina porta obre.',
+   key:'pis',label2:'Pis',val:'C/ Major 5, 2n 1a'}
+ ]
+};
+const DECOYS={
+ martina:[
+  {id:'esmorzar',decoy:true,label:'[foto]',cap:'esmorzar de diumenge 🍓',date:'21 de setembre'},
+  {id:'vambes',decoy:true,label:'[foto]',cap:'estrenant 🤍',date:'15 de setembre'},
+  {id:'platja',decoy:true,label:'[foto]',cap:'❤️🌅',date:'10 d\'agost',text:'Una posta de sol a la platja. Podria ser qualsevol platja: no diu on, ni amb qui, i ja ha passat.'}
+ ],
+ pau:[
+  {id:'setup',decoy:true,label:'[foto]',cap:'setup renovat 💜',date:'25 de setembre'},
+  {id:'pilota',decoy:true,label:'[foto]',cap:'últim entreno de la setmana ⚽',date:'11 de setembre'},
+  {id:'gelat',decoy:true,label:'[foto]',cap:'estiu no te\'n vagis 🍦',date:'30 d\'agost',text:'Un gelat amb un passeig al fons. No es pot saber quin poble és, i és una foto d\'estiu: no diu on és ara.'}
+ ],
+ aina:[
+  {id:'tardor',decoy:true,label:'[foto]',cap:'ja és tardor 🍂',date:'3 d\'octubre'},
+  {id:'guineu',decoy:true,label:'[foto]',cap:'acabada! 🦊🎨',date:'29 de setembre',text:'Un dibuix seu. Ensenyar el que fas és el millor que es pot penjar: no diu res de on ets.'},
+  {id:'xocolata',decoy:true,label:'[foto]',cap:'dia de pluja = xocolata ☕',date:'24 de setembre'}
+ ],
+ marc:[
+  {id:'berenar',decoy:true,label:'[foto]',cap:'post-entreno 💪',date:'29 de setembre'},
+  {id:'sabatilles',decoy:true,label:'[foto]',cap:'10 km sota la pluja 🌧️',date:'16 de setembre'},
+  {id:'cistella',decoy:true,label:'[foto]',cap:'🏀🌅',date:'2 de setembre'}
+ ]
+};
+const ORDER={
+ martina:['concert','notif','bus','esmorzar','volei','vambes','institut','motxilla','vista','pis','platja','menorca','coco','joc','aniversari'],
+ pau:['stream','discord','festa','setup','ps5','pizza','regal','pilota','samarreta','cotxe','wifi','gelat'],
+ aina:['parc','tardor','notes','dni','guineu','mapa','xocolata','ascensor','grup','tele','rutina','lluna'],
+ marc:['strava','xat','berenar','riu','bici','claus','sabatilles','postit','clau','gym','cistella','germa']
+};
+PROFILES.forEach(p=>{p.posts=p.posts.concat(EXTRA[p.id],DECOYS[p.id]);p.posts.sort((a,b)=>ORDER[p.id].indexOf(a.id)-ORDER[p.id].indexOf(b.id));});
+const PHOTO={
+ esmorzar:{img:'d-esmorzar'},vambes:{img:'d-vambes'},platja:{img:'d-platja'},
+ setup:{img:'d-setup'},pilota:{img:'d-pilota'},gelat:{img:'d-gelat'},
+ tardor:{img:'d-tardor'},guineu:{img:'d-guineu'},xocolata:{img:'d-xocolata'},
+ berenar:{img:'d-berenar'},sabatilles:{img:'d-sabatilles'},cistella:{img:'d-cistella'},
+ vista:{img:'vista',boxes:[[37,47,28,16],[69,59,24,10]]},
+ motxilla:{img:'motxilla',boxes:[[52,50,14,17]]},
+ pizza:{img:'pizza',boxes:[[83,13,17,24]]},
+ cotxe:{img:'cotxe',boxes:[[42,65,25,8]]},
+ ascensor:{img:'ascensor',boxes:[[25,1,27,29],[40,51,7,6]]},
+ tele:{img:'tele',boxes:[[28,20,43,14]]},
+ bici:{img:'bici',boxes:[[47,0,7,9],[54,40,8,8]]},
+ clau:{img:'clau',boxes:[[46,36,26,28]]},
+ concert:{img:'concert',boxes:[[57,23,17,17],[64,46,17,16]]},
+ bus:{img:'bus',boxes:[[37,0,24,35]]},
+ volei:{img:'volei',boxes:[[7,21,44,34]]},
+ institut:{img:'institut',boxes:[[33,37,36,12]]},
+ pis:{img:'pis',boxes:[[57,17,10,11],[73,1,22,24]]},
+ menorca:{img:'menorca',boxes:[[11,30,80,50]]},
+ coco:{img:'coco',boxes:[[45,56,10,7]]},
+ aniversari:{img:'cake',boxes:[[41,15,22,24]]},
+ ps5:{img:'ps5',boxes:[[16,55,28,21]]},
+ regal:{img:'regal',boxes:[[27,70,37,13]]},
+ samarreta:{img:'samarreta',boxes:[[31,16,23,46]]},
+ wifi:{img:'wifi',boxes:[[37,28,33,28]]},
+ parc:{img:'parc',overlay:'<span class="ui-loc clue">📍 Parc de l\'Estació · ara</span>'},
+ rutina:{img:'rutina',overlay:'<div class="ui-text"><span>7:00 em llevo</span><span class="clue">7:40 surto sola</span><span class="clue">per C/ Roger de Flor</span></div>'},
+ lluna:{img:'lluna'},
+ riu:{img:'riu',overlay:'<div class="ui-text"><span>DISSABTES</span><span class="clue">8:00 · sol</span><span class="clue">camí del riu</span></div>'},
+ claus:{img:'claus',boxes:[[73,51,13,20]]},
+ postit:{img:'postit',boxes:[[4,43,53,25]]},
+ gym:{img:'gym',boxes:[[29,67,35,11]]},
+ germa:{img:'escola',boxes:[[28,26,43,10]]}
+};
+function sceneOf(p){
+  const ph=PHOTO[p.id]; if(!ph) return p.scene+`<span class="tile-label">${p.label}</span>`;
+  return `<img class="ph" src="img/${ph.img}.jpg" alt="${p.label.replace(/[\[\]]/g,'')}">`+(ph.overlay||'')+(ph.boxes||[]).map(b=>`<span class="hbox" style="left:${b[0]}%;top:${b[1]}%;width:${b[2]}%;height:${b[3]}%"></span>`).join('');
+}
+let P=PROFILES[0];
+const revealedBy={};PROFILES.forEach(p=>revealedBy[p.id]=new Set());
+const finalShown=new Set();
+const grid=document.getElementById('grid'), dossier=document.getElementById('dossier'), profilesEl=document.getElementById('profiles');
+function revealed(){return revealedBy[P.id];}
+function clues(p){return p.posts.filter(x=>!x.decoy);}
+function foundIn(p){return clues(p).filter(x=>revealedBy[p.id].has(x.id)).length;}
+function renderProfiles(){
+  profilesEl.innerHTML='';
+  PROFILES.forEach(p=>{
+    const b=document.createElement('button');b.type='button';b.className='pcard';b.setAttribute('aria-pressed',p===P);
+    b.innerHTML=`<span class="mini" style="background:${p.av}">${p.letter}</span><span><b>${p.handle}</b><small>${foundIn(p)} / ${clues(p).length} pistes</small></span>`;
+    b.addEventListener('click',()=>{P=p;renderAll();});
+    profilesEl.appendChild(b);
+  });
+}
+function renderHeader(){
+  const av=document.getElementById('pAvatar');av.style.background=P.av;av.textContent=P.letter;
+  document.getElementById('pHandle').textContent=P.handle;
+  document.getElementById('pStats').innerHTML=`<span><b>${P.posts.length}</b> publicacions</span><span><b>${P.followers}</b> seguidors</span><span><b>${P.following}</b> seguits</span>`;
+  document.getElementById('pBio').innerHTML=`<b>${P.name}</b><br>${P.bio}`;
+  document.getElementById('dHandle').textContent='EXPEDIENT · '+P.handle;
+  document.getElementById('total').textContent=clues(P).length;
+  document.getElementById('finalPw').textContent=P.final.pw;
+  document.getElementById('finalText').textContent=P.final.text;
+  document.getElementById('final').hidden=!finalShown.has(P.id);
+}
+function tileHTML(p){
+  return `<div class="tile${revealed().has(p.id)?' revealed':''}" style="background:${p.bg}">${sceneOf(p)}</div>`;
+}
+function renderGrid(){
+  grid.innerHTML='';
+  P.posts.forEach(p=>{
+    const b=document.createElement('button');
+    b.type='button';b.className='tile'+(revealed().has(p.id)?' revealed':'');b.style.background=p.bg;
+    b.setAttribute('aria-label','Obre la publicació: '+p.label);
+    b.innerHTML=sceneOf(p)+(revealed().has(p.id)?(p.decoy?'<span class="seen none">RES</span>':'<span class="seen">PISTA</span>'):'');
+    b.addEventListener('click',()=>openPost(p));
+    grid.appendChild(b);
+  });
+}
+function renderDossier(freshKey){
+  dossier.innerHTML='';
+  const rows=[{key:'nom',label2:'Nom',val:P.name.replace(/\s*\p{Extended_Pictographic}/gu,''),fixed:true}].concat(clues(P).map(p=>({key:p.key,label2:p.label2,val:p.val,id:p.id})));
+  rows.forEach((r,i)=>{
+    const on=r.fixed||revealed().has(r.id);
+    const row=document.createElement('div');row.className='d-row'+(r.key===freshKey?' fresh':'');
+    row.innerHTML=`<dt>${r.label2}</dt><dd>${on?r.val:`<span class="bar" style="width:${9+((i*5+r.key.length*3)%13)}ch"></span>`}</dd>`;
+    dossier.appendChild(row);
+  });
+  document.getElementById('found').textContent=foundIn(P);
+  document.getElementById('guessBtn').disabled=foundIn(P)<clues(P).length;
+}
+function renderAll(fresh){renderProfiles();renderHeader();renderGrid();renderDossier(fresh);}
+const overlay=document.getElementById('overlay');let current=null;
+function openPost(p){
+  current=p;
+  document.getElementById('dTile').innerHTML=tileHTML(p);
+  document.getElementById('dWho').textContent=P.handle;
+  document.getElementById('dCap').innerHTML=p.cap;
+  document.getElementById('dDate').innerHTML=p.date;
+  document.getElementById('dTitle').textContent=p.decoy?'Cap pista':p.title;
+  document.getElementById('dTitle').classList.toggle('safe',!!p.decoy);
+  document.getElementById('dHard').hidden=!p.hard;
+  document.getElementById('dText').textContent=p.decoy?(p.text||'Aquí no hi ha res que l\'identifiqui. Penjar coses no és el problema: el problema són els detalls.'):p.text;
+  setDetailRevealed(revealed().has(p.id));
+  overlay.hidden=false;
+  document.getElementById(revealed().has(p.id)?'dClose':'dShow').focus();
+}
+function setDetailRevealed(on){
+  document.getElementById('dReveal').hidden=!on;
+  document.getElementById('dShow').hidden=on;
+  overlay.querySelector('.detail').classList.toggle('revealed',on);
+  const t=overlay.querySelector('#dTile .tile'); if(t) t.classList.toggle('revealed',on);
+}
+document.getElementById('dShow').addEventListener('click',()=>{
+  if(!current) return;
+  revealed().add(current.id);setDetailRevealed(true);renderAll(current.key);
+  document.getElementById('dClose').focus();
+});
+function closePost(){overlay.hidden=true;current=null;}
+document.getElementById('dClose').addEventListener('click',closePost);
+overlay.addEventListener('click',e=>{if(e.target===overlay)closePost();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)closePost();});
+document.getElementById('allBtn').addEventListener('click',()=>{P.posts.forEach(p=>revealed().add(p.id));renderAll();});
+document.getElementById('resetBtn').addEventListener('click',()=>{revealed().clear();finalShown.delete(P.id);renderAll();});
+document.getElementById('guessBtn').addEventListener('click',()=>{finalShown.add(P.id);document.getElementById('final').hidden=false;});
+renderAll();
+
+/* ---------------- Part 2: passwords ---------------- */
+const COMMON=['123456','12345678','123456789','1234567890','password','contrasenya','qwerty','111111','000000','abc123','iloveyou','teamo','654321','admin','hola123','barca','madrid','password1','qwerty123'];
+const DOSSIER=['martina','marti','vidal','coco','menorca','riuclar','acacies','volei','dimarts','dijous','vdl','serra','pau','aina','ribas','lluna','reus','marcfit','marc','torres'];
+const DICT=['hola','amor','futbol','barca','madrid','gat','gos','casa','love','princesa','dragon','pass','perro','gato','tiktok','insta','roblox','fortnite','minecraft'];
+const examples=['123456','martina2011','Coco2011!','M@rt1n4!','coco-menorca-volei-dimarts','tres gats blaus salten'];
+const chips=document.getElementById('chips');
+examples.forEach(x=>{const c=document.createElement('button');c.type='button';c.className='chip';c.textContent=x;c.addEventListener('click',()=>{pw.value=x;update();});chips.appendChild(c);});
+const pw=document.getElementById('pw');
+function analyze(s){
+  const notes=[];
+  let pool=0;
+  if(/[a-zà-ÿ]/.test(s))pool+=26;
+  if(/[A-ZÀ-Ý]/.test(s))pool+=26;
+  if(/\d/.test(s))pool+=10;
+  if(/[^a-zA-Z0-9À-ÿ]/.test(s))pool+=33;
+  pool=Math.max(pool,10);
+  const flat=s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  if(COMMON.includes(flat.replace(/[^a-z0-9]/g,''))||COMMON.includes(flat)){
+    notes.push(['bad','És a la llista de contrasenyes més fetes servir del món. És el primer que proven.']);
+    return {sec:0,notes};
+  }
+  let bits=0, rest=flat;
+  rest=rest.replace(/(19[5-9]\d|20[0-3]\d)/g,m=>{
+    if(m==='2011'){bits+=3;notes.push(['bad','«2011» és l\'any de naixement de tot 3r d\'ESO. És el primer que proven.']);}
+    else{bits+=7;notes.push(['bad','«'+m+'» sembla un any. Els anys són el primer que es prova.']);}
+    return '';});
+  let seq=false;
+  rest=rest.replace(/0123|1234|2345|3456|4567|5678|6789|abcd|qwer|asdf|zxcv/g,()=>{bits+=4;seq=true;return '';});
+  if(seq)notes.push(['bad','Seqüències de teclat o de números (1234, qwer) no compten gaire.']);
+  let leet=false;
+  const unleet=t=>t.replace(/[@4]/g,'a').replace(/1/g,'i').replace(/3/g,'e').replace(/0/g,'o').replace(/[5$]/g,'s').replace(/7/g,'t');
+  function strip(list,cost,msg){
+    [...list].sort((a,b)=>b.length-a.length).forEach(w=>{
+      let u=unleet(rest),i=u.indexOf(w);
+      while(i>-1){
+        if(rest.slice(i,i+w.length)!==w)leet=true;
+        rest=rest.slice(0,i)+rest.slice(i+w.length);bits+=cost;
+        if(msg)notes.push(['bad',msg(w)]);
+        u=unleet(rest);i=u.indexOf(w);
+      }
+    });
+  }
+  strip(DOSSIER,10,w=>'«'+w+'» surt en un dels perfils que hem investigat.');
+  strip(DICT,13,w=>'«'+w+'» és una paraula que és a tots els diccionaris d\'atac.');
+  if(leet){bits+=2;notes.push(['bad','Canviar lletres per números o símbols (a→@, i→1) no enganya ningú: els programes ja ho proven.']);}
+  bits+=rest.length*Math.log2(pool);
+  if(/^[A-ZÀ-Ý][^A-ZÀ-Ý]*$/.test(s))bits+=1;
+  if(s.length<10)notes.push(['bad','Només '+s.length+' caràcters.']);
+  if(s.length>=18)notes.push(['good',s.length+' caràcters. Cada caràcter de més multiplica el temps.']);
+  const sec=Math.pow(2,bits)/2/1e10;
+  if(sec>3.15e7*1e6&&!notes.some(n=>n[0]==='bad'))notes.push(['good','Res del perfil, res de diccionari ni d\'anys. Així sí.']);
+  return {sec,notes};
+}
+function fmt(sec){
+  const Y=31557600;
+  if(sec<1)return 'Al moment';
+  if(sec>Y*1e9)return 'Milers de milions d\'anys';
+  if(sec>Y*1e6)return 'Milions d\'anys';
+  const U=[['any','anys',Y],['mes','mesos',2629800],['dia','dies',86400],['hora','hores',3600],['minut','minuts',60],['segon','segons',1]];
+  for(const [s,pl,v] of U){if(sec>=v){const n=Math.round(sec/v);return n.toLocaleString('ca')+' '+(n===1?s:pl);}}
+}
+function update(){
+  const s=pw.value;
+  const tEl=document.getElementById('time'),m=document.getElementById('meter'),v=document.getElementById('verdict'),n=document.getElementById('notes');
+  if(!s){tEl.textContent='—';m.style.width='0';v.textContent='';n.innerHTML='';return;}
+  const r=analyze(s);
+  tEl.textContent=fmt(r.sec);
+  const score=Math.min(1,Math.log10(r.sec+1)/Math.log10(31557600*1e4));
+  m.style.width=(4+score*96)+'%';
+  const Y=31557600;
+  let col='var(--stamp)',label='Molt feble';
+  if(r.sec>86400){col='var(--marker)';label='Feble';}
+  if(r.sec>Y*100){col='var(--ok)';label='Forta';}
+  m.style.background=col;v.textContent=label;v.style.color=r.sec>Y*100?'var(--ok)':(r.sec>86400?'var(--ink)':'var(--stamp)');
+  n.innerHTML='';
+  r.notes.forEach(([k,t])=>{const li=document.createElement('li');if(k==='good')li.className='good';li.textContent=t;n.appendChild(li);});
+}
+pw.addEventListener('input',update);update();
+
+/* ---------------- Part 3: phishing ---------------- */
+const MSGS=[
+ {app:'SMS',time:'ara',from:'CORREUS',scam:true,
+  body:'El teu paquet està retingut per taxes pendents (1,99 €). <span class="flag">Paga en 24 h</span> o serà retornat: <span class="flag">correus-enviaments.info/pagar</span>',
+  why:['Urgència: et vol fer córrer perquè no pensis.','L\'enllaç no és de correus.cat.','Demanen poquets diners: el que volen és la teva targeta.']},
+ {app:'WhatsApp',time:'fa 2 min',from:'Laia (classe) 💜',scam:true,
+  body:'Ei!! <span class="flag">T\'ha arribat un codi de 6 xifres per error</span>, me\'l pots passar? <span class="flag">És urgent</span> porfa 🙏',
+  why:['Aquell codi serveix per entrar al TEU WhatsApp. Si el passes, et roben el compte.','El compte de la Laia ja està robat: per això t\'escriu «ella».','Cap codi de verificació es passa a ningú. Mai.']},
+ {app:'App de l\'institut',time:'fa 1 h',from:'Tutoria 3r ESO',scam:false,
+  body:'Recordatori: dijous sortida al Museu de la Ciència. Cal portar l\'autorització signada <span class="flag okf">el dimecres a classe</span>.',
+  why:['Arriba per l\'app oficial de l\'institut, no per un número desconegut.','No hi ha cap enllaç ni et demana dades.','L\'únic que demana és una cosa que ja coneixes: portar un paper a classe.']},
+ {app:'SMS',time:'fa 20 min',from:'Missatgeria',scam:false,
+  body:'El teu paquet arriba avui entre les 10 i les 14 h. Pots seguir-lo des de l\'app de la botiga on l\'has comprat.',
+  why:['No et demana cap pagament ni cap dada.','No hi ha enllaç: et diu que ho miris des de l\'app on has comprat.','Compara\'l amb el primer missatge: aquí no hi ha pressa ni amenaça.']},
+ {app:'Instagram · Missatge',time:'fa 1 h',from:'instagram.support.team ✔️',scam:true,
+  body:'Hem detectat una infracció de drets d\'autor. <span class="flag">El teu compte serà eliminat en 24 h</span>. Si creus que és un error, <span class="flag">verifica les teves dades aquí</span>.',
+  why:['Instagram no t\'escriu per missatge directe.','El ✔️ és un emoji posat al nom, no una verificació.','Amenaça + termini + enllaç = phishing.']},
+ {app:'Bizum',time:'ara',from:'Bizum',scam:false,
+  body:'<span class="flag okf">Has rebut 15,00 €</span> de Iaia. Concepte: per al cine 🎬',
+  why:['És una notificació de diners REBUTS, no una sol·licitud.','No has de fer res: ja els tens.','Es pot comprovar obrint l\'app del banc i mirant el saldo.']},
+ {app:'Bizum',time:'fa 5 min',from:'Sol·licitud de Bizum',scam:true,
+  body:'<span class="flag">Pol M. et sol·licita 50,00 €</span>. Concepte: «t\'ho he enviat per error, torna-m\'ho»',
+  why:['És una SOL·LICITUD: si acceptes, pagues tu.','Ningú t\'ha enviat res. Mira el saldo abans de fer cap cosa.','Si algú t\'envia diners per error, que ho reclami al banc.']},
+ {app:'Discord · Missatge',time:'fa 10 min',from:'xavi_gg',scam:true,
+  body:'ei perdona 😬 <span class="flag">t\'he reportat sense voler</span>. Parla amb l\'admin <span class="flag">@discord_safety_team</span> o et banejaran el compte avui',
+  why:['És una estafa molt típica a Discord i als jocs: el «admin» et demanarà la contrasenya o que escanegis un QR.','Discord no té admins que t\'escriguin per DM.','Un desconegut amb pressa i una amenaça: mala combinació.']},
+ {app:'Correu',time:'ahir',from:'Google · <span class="flag okf">no-reply@accounts.google.com</span>',scam:false,
+  body:'Nou inici de sessió al teu compte des de Windows · Barcelona. Si has estat tu, no cal fer res. Si no, revisa l\'activitat.',
+  why:['El remitent és el domini oficial de Google.','No et demana cap contrasenya ni cap codi.','Tot i així: no cliquis l\'enllaç. Obre l\'app de Google i revisa-ho des d\'allà.']},
+ {app:'Instagram',time:'fa 3 min',from:'Instagram',scam:false,
+  body:'<span class="flag okf">marc.fit_07</span> ha començat a seguir-te.',
+  why:['Una notificació normal de l\'app.','No et demana res ni porta enllaços estranys.','Això sí: si no el coneixes, no cal acceptar-lo ni seguir-lo.']},
+ {app:'Correu',time:'fa 2 h',from:'Steam · <span class="flag">support@steamcommunlty.com</span>',scam:true,
+  body:'Hem detectat activitat sospitosa. <span class="flag">El teu compte serà suspès</span> si no inicies sessió en les pròximes 12 hores.',
+  why:['Mira bé el domini: «communlty» amb una L en lloc de la I.','Amenaça + termini curt.','Si et preocupa, obre l\'app de Steam directament, mai des del correu.']},
+ {app:'WhatsApp',time:'fa 1 min',from:'+34 6•• ••• 812',scam:true,
+  body:'Ei sóc el Pau!! <span class="flag">se m\'ha trencat el mòbil, aquest és el meu número nou</span>. <span class="flag">Em fas un Bizum de 20 €?</span> te\'ls torno demà',
+  why:['Número desconegut que diu ser un amic.','Comprova-ho per una altra via: truca al número antic o pregunta-li a classe.','A les famílies els fan la mateixa estafa: «Hola mama, se m\'ha trencat el mòbil». Expliqueu-ho a casa.']},
+ {app:'SMS',time:'ara',from:'WhatsApp',scam:false,
+  body:'Codi de WhatsApp: 482-913. <span class="flag okf">No el comparteixis amb ningú.</span>',
+  why:['És el missatge oficial que arriba quan algú registra el teu número.','Si no l\'has demanat tu, algú està intentant entrar al teu compte: és el que buscava la «Laia».','Activa la verificació en dos passos i aquest codi sol no els servirà.']},
+ {app:'TikTok',time:'fa 4 h',from:'TikTok',scam:false,
+  body:'S\'ha iniciat sessió al teu compte des d\'un dispositiu nou. Si no has estat tu, <span class="flag okf">canvia la contrasenya des de l\'app</span>.',
+  why:['Notificació dins de l\'app, sense enllaços.','Et diu que ho facis des de l\'app, no des d\'una web.','Si no has estat tu, fes-li cas: canvia la contrasenya.']},
+ {app:'Instagram · Missatge',time:'fa 6 min',from:'laia.ribes_',scam:true,
+  body:'<span class="flag">ets tu en aquest vídeo?? 😳😳</span> <span class="flag">bit.ly/v1d30-x</span>',
+  why:['És el compte d\'una amiga, però l\'han robat i envia el mateix a tots els contactes.','Un enllaç escurçat i curiositat: és l\'esquer clàssic.','En dubte, pregunta-li per una altra via si t\'ho ha enviat ella.']}
+];
+let mi=0;const votes=new Array(MSGS.length).fill(null);
+const screen=document.getElementById('screen'),slot=document.getElementById('msgSlot');
+function renderMsg(){
+  const m=MSGS[mi];
+  slot.innerHTML=`<div class="msg"><div class="app"><span>${m.app}</span><span>${m.time}</span></div><div class="from">${m.from}</div><div class="body">${m.body}</div></div>`;
+  const v=votes[mi];
+  screen.classList.toggle('shown',v!==null);
+  document.getElementById('mIdx').textContent=(mi+1)+' / '+MSGS.length;
+  const ans=document.getElementById('answer');
+  document.getElementById('voteScam').disabled=v!==null;document.getElementById('voteReal').disabled=v!==null;
+  if(v===null){ans.hidden=true;}
+  else{
+    ans.hidden=false;
+    const st=document.getElementById('aStamp');
+    st.textContent=m.scam?'Estafa':'Real';st.style.color=m.scam?'var(--stamp)':'var(--ok)';
+    document.getElementById('aHit').textContent=(v===m.scam)?'La classe l\'ha encertat.':'La classe ha fallat.';
+    const ul=document.getElementById('aList');ul.innerHTML='';m.why.forEach(w=>{const li=document.createElement('li');li.textContent=w;ul.appendChild(li);});
+  }
+  const answered=votes.filter(x=>x!==null).length,hits=votes.filter((x,i)=>x!==null&&x===MSGS[i].scam).length;
+  document.getElementById('score').textContent=hits+' / '+answered;
+  document.getElementById('prevMsg').disabled=mi===0;
+  document.getElementById('nextMsg').disabled=mi===MSGS.length-1;
+}
+function vote(isScam){votes[mi]=isScam;renderMsg();}
+document.getElementById('voteScam').addEventListener('click',()=>vote(true));
+document.getElementById('voteReal').addEventListener('click',()=>vote(false));
+document.getElementById('prevMsg').addEventListener('click',()=>{if(mi>0){mi--;renderMsg();}});
+document.getElementById('nextMsg').addEventListener('click',()=>{if(mi<MSGS.length-1){mi++;renderMsg();}});
+renderMsg();
+
+/* ---------------- Part 4: mission ---------------- */
+const TASKS=[
+ ['Verificació en dos passos a WhatsApp','Amb això, encara que algú tingui el codi de 6 xifres, no pot entrar.','WhatsApp › Configuració › Compte › Verificació en dos passos › Activa'],
+ ['Compte privat','Que només et vegi qui tu acceptes.','Instagram / TikTok › Configuració › Privadesa › Compte privat'],
+ ['Fes neteja de seguidors','Si no el coneixes en persona, no cal que vegi la teva vida.','Perfil › Seguidors › elimina els que no coneguis'],
+ ['Treu la ubicació de les fotos','Les fotos poden guardar on s\'han fet.','iPhone: Configuració › Privadesa › Localització › Càmera › Mai · Android: Càmera › Configuració › Etiquetes d\'ubicació'],
+ ['Canvia una contrasenya dolenta','Si té la mascota, l\'any o el teu nom, canvia-la avui.','Tres o quatre paraules a l\'atzar, i diferent per a cada lloc']
+];
+const mission=document.getElementById('mission');
+TASKS.forEach((t,i)=>{
+  const l=document.createElement('label');l.className='task';l.htmlFor='task'+i;
+  l.innerHTML=`<input type="checkbox" id="task${i}"><div><h3>${t[0]}</h3><p>${t[1]}</p><p class="path">${t[2]}</p></div>`;
+  l.querySelector('input').addEventListener('change',e=>{l.classList.toggle('done',e.target.checked);document.getElementById('mDone').textContent=mission.querySelectorAll('input:checked').length+' / '+TASKS.length;});
+  mission.appendChild(l);
+});
+})();
+</script>
+</body>
+</html>
