@@ -107,6 +107,7 @@ mark,.hl{background:linear-gradient(transparent 12%,var(--marker) 12%,var(--mark
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;border-top:1px solid var(--line)}
 .tile{position:relative;aspect-ratio:1;max-width:100%;container-type:inline-size;overflow:hidden;cursor:pointer;border:0;padding:0;display:grid;place-items:center;text-align:center}
 .tile:hover .tile-label{opacity:1}
+.tile>*{pointer-events:none}
 .tile-label{position:absolute;left:4cqw;top:4cqw;right:4cqw;width:max-content;max-width:92cqw;text-align:left;font-family:var(--type);font-size:max(10px,5.4cqw);color:#fff;background:rgba(10,12,16,.55);padding:.6cqw 2cqw;line-height:1.3}
 .tile .seen{position:absolute;right:5cqw;bottom:5cqw;font-family:var(--type);font-size:max(10px,6cqw);background:var(--marker);color:var(--marker-ink);padding:0 5px}
 .clue{transition:background .3s}
@@ -665,7 +666,7 @@ const PROFILES=[
     title:'Institut, curs i grup',text:'Nom de l\'institut, curs i grup. Ja saben on és cada matí i amb qui.',
     key:'institut',label2:'Institut',val:'Ins Can Vidal, 3r A'},
    {id:'grup',bg:'linear-gradient(150deg,#DCF8C6,#7BC67E)',label:'[captura del grup de classe]',
-    scene:'<div class="sign s-chat light"><span class="ch">3r A 💬 · 27 membres</span><span class="clue">+34 600 000 111 · Júlia</span><span class="clue">+34 600 000 222 · Nil</span><span>Júlia: algú té els deures??</span></div>',
+    scene:'<div class="sign s-chat light"><span class="ch">3r A 💬 · 27 membres</span><span class="clue">+34 000 000 111 · Júlia</span><span class="clue">+34 000 000 222 · Nil</span><span>Júlia: algú té els deures??</span></div>',
     cap:'el grup de classe és un caos 😂',date:'15 de setembre',
     title:'Dades d\'altres persones',text:'A la captura surten els telèfons dels companys. Ha exposat gent que no ha decidit res.',
     key:'altres',label2:'Dades d\'altres',val:'Telèfons de la Júlia i el Nil'},
@@ -725,7 +726,7 @@ const EXTRA={
   {id:'motxilla',hard:true,label:'[foto: motxilla nova]',
    cap:'motxilla nova per a 3r 💜',date:'8 de setembre',
    title:'Nom complet i telèfon',text:'L\'etiqueta de la motxilla porta el nom complet i el mòbil. Amb el número la poden trobar a WhatsApp, a Bizum i a moltes apps.',
-   key:'telefon',label2:'Telèfon',val:'Martina Vidal · 600 000 333'},
+   key:'telefon',label2:'Telèfon',val:'Martina Vidal · 000 000 333'},
   {id:'vista',hard:true,label:'[foto: des del balcó]',
    cap:'les millors vistes 🌅',date:'5 de setembre',
    title:'Què hi ha davant de casa',text:'Al davant: Farmàcia Puig i Forn Sant Jordi, amb el campanar al fons. Amb Google Maps es troba el carrer en dos minuts, i per l\'alçada, el pis.',
@@ -740,7 +741,7 @@ const EXTRA={
   {id:'pizza',hard:true,label:'[foto: el sopar]',
    cap:'sopar sol un altre cop 🍕⚽',date:'17 de setembre',
    title:'Tiquet de la comanda',text:'Al tiquet grapat a la bossa hi ha nom, adreça i telèfon. I el text confirma que molts vespres és sol a casa.',
-   key:'telefon',label2:'Telèfon',val:'600 000 444'},
+   key:'telefon',label2:'Telèfon',val:'000 000 444'},
   {id:'cotxe',hard:true,label:'[foto: el cotxe carregat]',
    cap:'els pares ja ho tenen tot carregat 🙄 cap a Andorra fins diumenge',date:'6 de setembre',
    title:'Matrícula i cap de setmana fora',text:'Matrícula del cotxe de la família i el carrer de casa al fons. I tot el cap de setmana, la casa buida.',
