@@ -36,6 +36,11 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+.fet{align-self:flex-start;display:inline-block;width:max-content;font-family:var(--sans);font-weight:900;font-size:clamp(34px,5vw,56px);line-height:1;color:var(--ok);border:4px solid var(--ok);padding:8px 20px 10px;transform:rotate(-3deg);animation:fetIn .25s ease-out}
+@keyframes fetIn{from{transform:rotate(-3deg) scale(1.5);opacity:0}}
+@media (prefers-reduced-motion:reduce){.fet{animation:none}}
+.fet-row{margin-top:28px;display:flex;align-items:center}
+.nav button.is-done::after{content:"✓";margin-left:8px;color:var(--marker)}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.5}
 h1,h2,h3{margin:0;text-wrap:balance;line-height:1.02}
@@ -427,6 +432,7 @@ mark,.hl{background:linear-gradient(transparent 12%,var(--marker) 12%,var(--mark
           <span class="eyebrow" style="color:var(--stamp)">Contrasenya probable</span>
           <span class="pw" id="finalPw"></span>
           <p style="font-size:16px" id="finalText"></p>
+          <div class="fet">Fet ✓</div>
         </div>
         <div class="d-actions">
           <button class="btn solid" id="guessBtn" type="button" disabled>Endevina la contrasenya</button>
@@ -463,6 +469,10 @@ mark,.hl{background:linear-gradient(transparent 12%,var(--marker) 12%,var(--mark
       <div class="lesson"><h3>Res del teu perfil</h3><p>Mascota, any, equip, sèrie preferida: si ho has penjat, ja no és secret.</p></div>
       <div class="lesson"><h3>Una per a cada lloc</h3><p>Si te'n roben una, que no obri totes les altres. Un gestor de contrasenyes les recorda per tu.</p></div>
     </div>
+    <div class="fet-row">
+      <button class="btn solid big" id="pwDoneBtn" type="button">Hem acabat</button>
+      <div class="fet" id="fetPw" hidden>Fet ✓</div>
+    </div>
   </section>
 
   <!-- ============ 03 ESTAFA ============ -->
@@ -490,6 +500,7 @@ mark,.hl{background:linear-gradient(transparent 12%,var(--marker) 12%,var(--mark
           <span class="hit" id="aHit"></span>
           <ul id="aList"></ul>
         </div>
+        <div class="fet" id="fetEstafa" hidden>Fet ✓</div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn" id="prevMsg" type="button">Anterior</button>
           <button class="btn solid" id="nextMsg" type="button">Següent missatge</button>
@@ -507,6 +518,7 @@ mark,.hl{background:linear-gradient(transparent 12%,var(--marker) 12%,var(--mark
     </div>
     <div class="mission" id="mission"></div>
     <div class="step-row"><span>Fet a la pissarra <b id="mDone">0 / 5</b></span></div>
+    <div class="fet-row" id="fetMissio" hidden><div class="fet">Fet ✓</div></div>
     <div class="closer">
       <span class="eyebrow">Per acabar</span>
       <p>Si ho penges, <span>ja no és només teu.</span></p>
@@ -539,6 +551,7 @@ mark,.hl{background:linear-gradient(transparent 12%,var(--marker) 12%,var(--mark
 (function(){
 /* ---------------- Tabs ---------------- */
 const tabs=[...document.querySelectorAll('[role="tab"]')];
+function setDone(id,on){const t=tabs.find(x=>x.getAttribute('aria-controls')===id);if(t)t.classList.toggle('is-done',on);}
 function show(id){
   tabs.forEach(t=>{const on=t.getAttribute('aria-controls')===id;t.setAttribute('aria-selected',on);document.getElementById(t.getAttribute('aria-controls')).hidden=!on;});
   window.scrollTo({top:0});
@@ -839,10 +852,11 @@ function revealed(){return revealedBy[P.id];}
 function clues(p){return p.posts.filter(x=>!x.decoy);}
 function foundIn(p){return clues(p).filter(x=>revealedBy[p.id].has(x.id)).length;}
 function renderProfiles(){
+  setDone('perfil',finalShown.size>0);
   profilesEl.innerHTML='';
   PROFILES.forEach(p=>{
     const b=document.createElement('button');b.type='button';b.className='pcard';b.setAttribute('aria-pressed',p===P);
-    b.innerHTML=`<span class="mini" style="background:${p.av}">${p.letter}</span><span><b>${p.handle}</b><small>${foundIn(p)} / ${clues(p).length} pistes</small></span>`;
+    b.innerHTML=`<span class="mini" style="background:${p.av}">${p.letter}</span><span><b>${p.handle}</b><small>${foundIn(p)} / ${clues(p).length} pistes${finalShown.has(p.id)?' · Fet ✓':''}</small></span>`;
     b.addEventListener('click',()=>{P=p;renderAll();});
     profilesEl.appendChild(b);
   });
@@ -917,7 +931,7 @@ overlay.addEventListener('click',e=>{if(e.target===overlay)closePost();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)closePost();});
 document.getElementById('allBtn').addEventListener('click',()=>{P.posts.forEach(p=>revealed().add(p.id));renderAll();});
 document.getElementById('resetBtn').addEventListener('click',()=>{revealed().clear();finalShown.delete(P.id);renderAll();});
-document.getElementById('guessBtn').addEventListener('click',()=>{finalShown.add(P.id);document.getElementById('final').hidden=false;});
+document.getElementById('guessBtn').addEventListener('click',()=>{finalShown.add(P.id);document.getElementById('final').hidden=false;renderProfiles();});
 renderAll();
 
 /* ---------------- Part 2: passwords ---------------- */
@@ -943,7 +957,8 @@ function analyze(s){
   }
   let bits=0, rest=flat;
   rest=rest.replace(/(19[5-9]\d|20[0-3]\d)/g,m=>{
-    if(m==='2011'){bits+=3;notes.push(['bad','«2011» és l\'any de naixement de tot 3r d\'ESO. És el primer que proven.']);}
+    if(m==='2012'){bits+=3;notes.push(['bad','«2012» és l\'any de naixement de gairebé tot 3r d\'ESO. És el primer que proven.']);}
+    else if(m==='2011'){bits+=3;notes.push(['bad','«2011» és l\'any de naixement dels perfils que hem investigat. És el primer que proven.']);}
     else{bits+=7;notes.push(['bad','«'+m+'» sembla un any. Els anys són el primer que es prova.']);}
     return '';});
   let seq=false;
@@ -998,6 +1013,7 @@ function update(){
   r.notes.forEach(([k,t])=>{const li=document.createElement('li');if(k==='good')li.className='good';li.textContent=t;n.appendChild(li);});
 }
 pw.addEventListener('input',update);update();
+document.getElementById('pwDoneBtn').addEventListener('click',e=>{e.currentTarget.hidden=true;document.getElementById('fetPw').hidden=false;setDone('contrasenyes',true);});
 
 /* ---------------- Part 3: phishing ---------------- */
 const MSGS=[
@@ -1067,6 +1083,7 @@ function renderMsg(){
   }
   const answered=votes.filter(x=>x!==null).length,hits=votes.filter((x,i)=>x!==null&&x===MSGS[i].scam).length;
   document.getElementById('score').textContent=hits+' / '+answered;
+  document.getElementById('fetEstafa').hidden=answered<MSGS.length;setDone('estafa',answered===MSGS.length);
   document.getElementById('prevMsg').disabled=mi===0;
   document.getElementById('nextMsg').disabled=mi===MSGS.length-1;
 }
@@ -1089,7 +1106,7 @@ const mission=document.getElementById('mission');
 TASKS.forEach((t,i)=>{
   const l=document.createElement('label');l.className='task';l.htmlFor='task'+i;
   l.innerHTML=`<input type="checkbox" id="task${i}"><div><h3>${t[0]}</h3><p>${t[1]}</p><p class="path">${t[2]}</p></div>`;
-  l.querySelector('input').addEventListener('change',e=>{l.classList.toggle('done',e.target.checked);document.getElementById('mDone').textContent=mission.querySelectorAll('input:checked').length+' / '+TASKS.length;});
+  l.querySelector('input').addEventListener('change',e=>{l.classList.toggle('done',e.target.checked);const n=mission.querySelectorAll('input:checked').length;document.getElementById('mDone').textContent=n+' / '+TASKS.length;document.getElementById('fetMissio').hidden=n<TASKS.length;setDone('missio',n===TASKS.length);});
   mission.appendChild(l);
 });
 })();
