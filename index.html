@@ -275,12 +275,17 @@ mark,.hl{background:linear-gradient(transparent 12%,var(--marker) 12%,var(--mark
 
 /* PART 4 */
 .mission{display:flex;flex-direction:column;border-top:2px solid var(--ink)}
-.task{display:grid;grid-template-columns:auto 1fr;gap:18px;padding:18px 0;border-bottom:1px solid var(--line);align-items:start;cursor:pointer}
-.task input{width:28px;height:28px;margin:4px 0 0;accent-color:var(--ok);cursor:pointer}
+.task{display:grid;grid-template-columns:1fr auto;gap:18px;padding:18px 0;border-bottom:1px solid var(--line);align-items:center}
+@media (max-width:700px){.task{grid-template-columns:1fr}}
+.choice{display:flex;gap:8px}
+.chbtn{border:2px solid var(--line);background:var(--sheet);color:var(--ink);padding:10px 14px;font-weight:800;font-size:16px;cursor:pointer;font-family:var(--sans);white-space:nowrap}
+.chbtn:hover{border-color:var(--ink)}
+.chbtn.yes[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.chbtn.no[aria-pressed="true"]{background:var(--stamp);border-color:var(--stamp);color:#fff}
+.m-summary{font-size:clamp(20px,2.2vw,26px);margin-top:20px;max-width:46ch}
 .task h3{font-size:clamp(22px,2.4vw,28px);font-stretch:110%}
 .task p{color:var(--muted);font-size:17px;margin-top:4px}
 .task .path{font-family:var(--type);color:var(--ink);font-size:16px}
-.task.done h3{text-decoration:line-through;text-decoration-color:var(--ok);text-decoration-thickness:3px}
 .closer{border-block:2px solid var(--ink);padding-block:44px;display:flex;flex-direction:column;gap:14px}
 .closer p{font-stretch:125%;font-weight:900;font-size:clamp(40px,7vw,96px);line-height:1;letter-spacing:-.03em;max-width:14ch}
 .closer p span{color:var(--stamp)}
@@ -296,7 +301,7 @@ mark,.hl{background:linear-gradient(transparent 12%,var(--marker) 12%,var(--mark
     <button role="tab" id="tab-perfil" aria-controls="perfil" aria-selected="false"><span>01</span>El perfil</button>
     <button role="tab" id="tab-contrasenyes" aria-controls="contrasenyes" aria-selected="false"><span>02</span>Contrasenyes</button>
     <button role="tab" id="tab-estafa" aria-controls="estafa" aria-selected="false"><span>03</span>Estafa o real?</button>
-    <button role="tab" id="tab-missio" aria-controls="missio" aria-selected="false"><span>04</span>Missió</button>
+    <button role="tab" id="tab-missio" aria-controls="missio" aria-selected="false"><span>04</span>I tu?</button>
   </div>
 </nav>
 
@@ -362,9 +367,9 @@ mark,.hl{background:linear-gradient(transparent 12%,var(--marker) 12%,var(--mark
         </article>
         <article class="part">
           <span class="num">04</span>
-          <h3>Missió</h3>
-          <p>Mòbil a la mà: cinc ajustos per protegir els vostres comptes, fets a classe i no «ja ho faré a casa».</p>
-          <p class="learn"><b>Aprendreu</b> a activar la verificació en dos passos, el compte privat i a treure la ubicació de les fotos.</p>
+          <h3>I tu?</h3>
+          <p>Cinc hàbits que protegeixen els comptes. Cadascú pensa quins ja fa i quins no, sense ensenyar el mòbil a ningú.</p>
+          <p class="learn"><b>Aprendreu</b> què us falta i com es fa: verificació en dos passos, compte privat, ubicació de les fotos i contrasenyes.</p>
           <button class="btn" type="button" data-go="missio">Anar-hi</button>
         </article>
       </div>
@@ -513,12 +518,14 @@ mark,.hl{background:linear-gradient(transparent 12%,var(--marker) 12%,var(--mark
   <!-- ============ 04 MISSIÓ ============ -->
   <section class="panel" id="missio" role="tabpanel" aria-labelledby="tab-missio" hidden>
     <div class="head">
-      <span class="eyebrow">Part 4 · Mòbil a la mà</span>
-      <h2 class="display">Missió: blinda el teu compte</h2>
-      <p class="lede">Cinc minuts. Ho feu ara, no a casa.</p>
+      <span class="eyebrow">Part 4 · Per pensar</span>
+      <h2 class="display">I tu, què fas?</h2>
+      <p class="lede">Cinc hàbits que protegeixen els comptes. Penseu quins ja feu i quins no. <mark>No cal fer-ho ara</mark>: és per saber què us falta.</p>
+      <p class="fine">Cadascú pensa la seva. Ningú ha d'ensenyar el mòbil ni dir-ho en veu alta, i les respostes no s'envien enlloc.</p>
     </div>
     <div class="mission" id="mission"></div>
-    <div class="step-row"><span>Fet a la pissarra <b id="mDone">0 / 5</b></span></div>
+    <div class="step-row"><span>Respostes <b id="mDone">0 / 5</b></span></div>
+    <div class="m-summary" id="mSummary" hidden></div>
     <div class="fet-row" id="fetMissio" hidden><div class="fet">Fet ✓</div></div>
     <div class="closer">
       <span class="eyebrow">Per acabar</span>
@@ -1097,19 +1104,29 @@ renderMsg();
 
 /* ---------------- Part 4: mission ---------------- */
 const TASKS=[
- ['Verificació en dos passos a WhatsApp','Amb això, encara que algú tingui el codi de 6 xifres, no pot entrar.','WhatsApp › Configuració › Compte › Verificació en dos passos › Activa'],
- ['Compte privat','Que només et vegi qui tu acceptes.','Instagram / TikTok › Configuració › Privadesa › Compte privat'],
- ['Fes neteja de seguidors','Si no el coneixes en persona, no cal que vegi la teva vida.','Perfil › Seguidors › elimina els que no coneguis'],
- ['Treu la ubicació de les fotos','Les fotos poden guardar on s\'han fet.','iPhone: Configuració › Privadesa › Localització › Càmera › Mai · Android: Càmera › Configuració › Etiquetes d\'ubicació'],
- ['Canvia una contrasenya dolenta','Si té la mascota, l\'any o el teu nom, canvia-la avui.','Tres o quatre paraules a l\'atzar, i diferent per a cada lloc']
+ ['Tinc la verificació en dos passos a WhatsApp','Encara que algú aconsegueixi el codi de 6 xifres, no pot entrar al teu compte.','WhatsApp › Configuració › Compte › Verificació en dos passos › Activa'],
+ ['El meu compte és privat','Només et veu qui tu acceptes.','Instagram / TikTok › Configuració › Privadesa › Compte privat'],
+ ['Només em segueix gent que conec','Si no el coneixes en persona, no cal que vegi la teva vida.','Perfil › Seguidors › elimina els que no coneguis'],
+ ['Les meves fotos no guarden la ubicació','Les fotos poden guardar on s\'han fet.','iPhone: Configuració › Privacitat i seguretat › Localització › Càmera › Mai · Android: Càmera › Configuració › Etiquetes d\'ubicació'],
+ ['Les meves contrasenyes no surten del meu perfil','Ni mascota, ni any, ni nom. I una de diferent per a cada lloc.','Tres o quatre paraules a l\'atzar. Un gestor de contrasenyes les recorda per tu.']
 ];
-const mission=document.getElementById('mission');
+const mission=document.getElementById('mission'),answers=new Array(TASKS.length).fill(null);
+function renderMission(){
+  const n=answers.filter(a=>a!==null).length,all=n===TASKS.length,pending=TASKS.filter((t,i)=>answers[i]===false);
+  document.getElementById('mDone').textContent=n+' / '+TASKS.length;
+  const s=document.getElementById('mSummary');s.hidden=!all;
+  if(all)s.innerHTML=pending.length?`Te'n falten <b>${pending.length}</b>. Tria'n una per fer aquesta setmana. Per exemple: <b>«${pending[0][0]}»</b>.`:'Ja ho fas tot. Ara explica-ho a casa i als amics.';
+  document.getElementById('fetMissio').hidden=!all;setDone('missio',all);
+}
 TASKS.forEach((t,i)=>{
-  const l=document.createElement('label');l.className='task';l.htmlFor='task'+i;
-  l.innerHTML=`<input type="checkbox" id="task${i}"><div><h3>${t[0]}</h3><p>${t[1]}</p><p class="path">${t[2]}</p></div>`;
-  l.querySelector('input').addEventListener('change',e=>{l.classList.toggle('done',e.target.checked);const n=mission.querySelectorAll('input:checked').length;document.getElementById('mDone').textContent=n+' / '+TASKS.length;document.getElementById('fetMissio').hidden=n<TASKS.length;setDone('missio',n===TASKS.length);});
-  mission.appendChild(l);
+  const d=document.createElement('div');d.className='task';
+  d.innerHTML=`<div><h3>${t[0]}</h3><p>${t[1]}</p><p class="path"><b>Com es fa:</b> ${t[2]}</p></div><div class="choice" role="group" aria-label="${t[0]}"><button type="button" class="chbtn yes" aria-pressed="false">Ja ho faig</button><button type="button" class="chbtn no" aria-pressed="false">Encara no</button></div>`;
+  const [yes,no]=d.querySelectorAll('.chbtn');
+  const set=v=>{answers[i]=answers[i]===v?null:v;yes.setAttribute('aria-pressed',answers[i]===true);no.setAttribute('aria-pressed',answers[i]===false);d.classList.toggle('done',answers[i]!==null);renderMission();};
+  yes.addEventListener('click',()=>set(true));no.addEventListener('click',()=>set(false));
+  mission.appendChild(d);
 });
+renderMission();
 })();
 </script>
 </body>
